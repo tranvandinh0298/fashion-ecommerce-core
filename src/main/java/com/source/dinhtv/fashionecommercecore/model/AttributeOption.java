@@ -1,14 +1,28 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
 import java.util.Date;
 
+@Entity(name="attribute_options")
 public class AttributeOption {
+    @Id
+    @GeneratedValue
     private Integer id;
-    private Integer attributeId;
+
+    @ManyToOne
+    private Attribute attribute;
+
     private String value;
     private Date createdAt;
     private Date updatedAt;
     private Date deletedAt;
+
+    public AttributeOption() {
+    }
 
     public AttributeOption(Integer attributeId, String value) {
         this.attributeId = attributeId;
