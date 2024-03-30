@@ -1,19 +1,57 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
-public class Product {
+@Entity(name="products")
+public class Product extends SoftDeleting {
+    @Id
+    @GeneratedValue
     private Integer id;
+    @NotBlank
+    @Column(name="name")
     private String name;
+    @NotBlank
+    @Column(name="slug")
     private String slug;
+    @NotBlank
+    @Column(name="code")
     private String code;
+    @NotBlank
+    @Column(name="description")
     private String description;
+    @NotBlank
+    @Column(name="status")
     private Integer status;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+
+    public Product() {
+    }
 
     public Product(String name, String slug, String code, String description, Integer status) {
+        this.name = name;
+        this.slug = slug;
+        this.code = code;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Product(Date createdAt, Date updatedAt, String name, String slug, String code, String description, Integer status) {
+        super(createdAt, updatedAt);
+        this.name = name;
+        this.slug = slug;
+        this.code = code;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Product(Date createdAt, Date updatedAt, Date deletedAt, String name, String slug, String code, String description, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
         this.name = name;
         this.slug = slug;
         this.code = code;
@@ -30,16 +68,24 @@ public class Product {
         this.status = status;
     }
 
-    public Product(Integer id, String name, String slug, String code, String description, Integer status, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Product(Date createdAt, Date updatedAt, Integer id, String name, String slug, String code, String description, Integer status) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.name = name;
         this.slug = slug;
         this.code = code;
         this.description = description;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Product(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String name, String slug, String code, String description, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.name = name;
+        this.slug = slug;
+        this.code = code;
+        this.description = description;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -88,29 +134,5 @@ public class Product {
 
     public void setstatus(Integer status) {
         this.status = status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
     }
 }

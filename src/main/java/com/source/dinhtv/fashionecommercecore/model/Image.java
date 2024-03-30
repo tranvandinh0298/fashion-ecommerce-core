@@ -1,17 +1,47 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
-public class Image {
+@Entity(name="images")
+public class Image extends SoftDeleting {
+    @Id
+    @GeneratedValue
     private Integer id;
+    @NotBlank
+    @Column(name="caption")
     private String caption;
+    @NotBlank
+    @Column(name="address")
     private String address;
+    @NotBlank
+    @Column(name="status")
     private Integer status;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+
+    public Image() {
+    }
 
     public Image(String caption, String address, Integer status) {
+        this.caption = caption;
+        this.address = address;
+        this.status = status;
+    }
+
+    public Image(Date createdAt, Date updatedAt, String caption, String address, Integer status) {
+        super(createdAt, updatedAt);
+        this.caption = caption;
+        this.address = address;
+        this.status = status;
+    }
+
+    public Image(Date createdAt, Date updatedAt, Date deletedAt, String caption, String address, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
         this.caption = caption;
         this.address = address;
         this.status = status;
@@ -24,14 +54,20 @@ public class Image {
         this.status = status;
     }
 
-    public Image(Integer id, String caption, String address, Integer status, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Image(Date createdAt, Date updatedAt, Integer id, String caption, String address, Integer status) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.caption = caption;
         this.address = address;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Image(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String caption, String address, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.caption = caption;
+        this.address = address;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -64,42 +100,5 @@ public class Image {
 
     public void setstatus(Integer status) {
         this.status = status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", caption='" + caption + '\'' +
-                ", address='" + address + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
-                '}';
     }
 }

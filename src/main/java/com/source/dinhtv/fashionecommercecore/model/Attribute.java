@@ -1,5 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,24 +13,17 @@ import jakarta.validation.constraints.Size;
 import java.util.Date;
 
 @Entity(name="attributes")
-public class Attribute {
+public class Attribute extends SoftDeleting {
     @Id
     @GeneratedValue
     private Integer id;
 
     @NotBlank
     @Size(min=1,message = "Tên thuộc tính phải lớn 1 ký tự")
+    @Column(name="name")
     private String name;
 
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
-
     public Attribute() {
-    }
-
-    public Attribute(String name) {
-        this.name = name;
     }
 
     public Attribute(Integer id, String name) {
@@ -36,12 +31,30 @@ public class Attribute {
         this.name = name;
     }
 
-    public Attribute(Integer id, String name, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Attribute(String name) {
+        this.name = name;
+    }
+
+    public Attribute(Date createdAt, Date updatedAt, String name) {
+        super(createdAt, updatedAt);
+        this.name = name;
+    }
+
+    public Attribute(Date createdAt, Date updatedAt, Integer id, String name) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.name = name;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Attribute(Date createdAt, Date updatedAt, Date deletedAt, String name) {
+        super(createdAt, updatedAt, deletedAt);
+        this.name = name;
+    }
+
+    public Attribute(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String name) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -58,29 +71,5 @@ public class Attribute {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
     }
 }

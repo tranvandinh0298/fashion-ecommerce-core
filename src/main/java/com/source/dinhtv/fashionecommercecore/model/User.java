@@ -1,5 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import com.source.dinhtv.fashionecommercecore.model.datetime.Timestamps;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -13,7 +15,7 @@ import jakarta.validation.constraints.Size;
 import java.util.Date;
 
 @Entity(name="users")
-public class User {
+public class User extends Timestamps {
     @Id
     @GeneratedValue
     private Integer id;
@@ -36,15 +38,20 @@ public class User {
     @Null
     private String remember_token;
 
-    private Date createdAt;
-
-    private Date updatedAt;
-
     public User() {
 
     }
 
     public User(String name, String email, Date emailVerifiedAt, String password, String remember_token) {
+        this.name = name;
+        this.email = email;
+        this.emailVerifiedAt = emailVerifiedAt;
+        this.password = password;
+        this.remember_token = remember_token;
+    }
+
+    public User(Date createdAt, Date updatedAt, String name, String email, Date emailVerifiedAt, String password, String remember_token) {
+        super(createdAt, updatedAt);
         this.name = name;
         this.email = email;
         this.emailVerifiedAt = emailVerifiedAt;
@@ -60,15 +67,15 @@ public class User {
         this.password = password;
         this.remember_token = remember_token;
     }
-    public User(Integer id, String name, String email, Date emailVerifiedAt, String password, String remember_token, Date createdAt, Date updatedAt) {
+
+    public User(Date createdAt, Date updatedAt, Integer id, String name, String email, Date emailVerifiedAt, String password, String remember_token) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.name = name;
         this.email = email;
         this.emailVerifiedAt = emailVerifiedAt;
         this.password = password;
         this.remember_token = remember_token;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Integer getId() {
@@ -117,21 +124,5 @@ public class User {
 
     public void setRemember_token(String remember_token) {
         this.remember_token = remember_token;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

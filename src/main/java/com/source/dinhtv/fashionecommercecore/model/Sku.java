@@ -1,18 +1,52 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
-public class Sku {
+@Entity(name="skus")
+public class Sku extends SoftDeleting {
+    @Id
+    @GeneratedValue
     private Integer id;
+    @NotBlank
+    @Column(name="code")
     private String code;
+    @NotBlank
+    @Column(name="product_id")
     private Integer productId;
+    @NotBlank
+    @Column(name="quantity")
     private Integer quantity;
+    @NotBlank
+    @Column(name="price")
     private Double price;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+
+    public Sku() {
+    }
 
     public Sku(String code, Integer productId, Integer quantity, Double price) {
+        this.code = code;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public Sku(Date createdAt, Date updatedAt, String code, Integer productId, Integer quantity, Double price) {
+        super(createdAt, updatedAt);
+        this.code = code;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public Sku(Date createdAt, Date updatedAt, Date deletedAt, String code, Integer productId, Integer quantity, Double price) {
+        super(createdAt, updatedAt, deletedAt);
         this.code = code;
         this.productId = productId;
         this.quantity = quantity;
@@ -27,15 +61,22 @@ public class Sku {
         this.price = price;
     }
 
-    public Sku(Integer id, String code, Integer productId, Integer quantity, Double price, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Sku(Date createdAt, Date updatedAt, Integer id, String code, Integer productId, Integer quantity, Double price) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.code = code;
         this.productId = productId;
         this.quantity = quantity;
         this.price = price;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Sku(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String code, Integer productId, Integer quantity, Double price) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.code = code;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     public Integer getId() {
@@ -76,29 +117,5 @@ public class Sku {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
     }
 }

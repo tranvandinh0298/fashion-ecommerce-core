@@ -1,21 +1,68 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
-public class Transaction {
+@Entity(name="transactions")
+public class Transaction extends SoftDeleting {
+    @Id
+    @GeneratedValue
     private Integer id;
+    @NotBlank
+    @Column(name="code")
     private String code;
+    @NotBlank
+    @Column(name="amount")
     private Double amount;
+    @NotBlank
+    @Column(name="paymentFee")
     private Double paymentFee;
+    @NotBlank
+    @Column(name="totalAmount")
     private Double totalAmount;
+    @NotBlank
+    @Column(name="payment_method_id")
     private Integer payment_method_id;
+    @NotBlank
+    @Column(name="user_id")
     private Integer user_id;
+    @NotBlank
+    @Column(name="status")
     private Integer status;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+
+    public Transaction() {
+
+    }
 
     public Transaction(String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status) {
+        this.code = code;
+        this.amount = amount;
+        this.paymentFee = paymentFee;
+        this.totalAmount = totalAmount;
+        this.payment_method_id = payment_method_id;
+        this.user_id = user_id;
+        this.status = status;
+    }
+
+    public Transaction(Date createdAt, Date updatedAt, String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status) {
+        super(createdAt, updatedAt);
+        this.code = code;
+        this.amount = amount;
+        this.paymentFee = paymentFee;
+        this.totalAmount = totalAmount;
+        this.payment_method_id = payment_method_id;
+        this.user_id = user_id;
+        this.status = status;
+    }
+
+    public Transaction(Date createdAt, Date updatedAt, Date deletedAt, String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
         this.code = code;
         this.amount = amount;
         this.paymentFee = paymentFee;
@@ -36,7 +83,8 @@ public class Transaction {
         this.status = status;
     }
 
-    public Transaction(Integer id, String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Transaction(Date createdAt, Date updatedAt, Integer id, String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.code = code;
         this.amount = amount;
@@ -45,9 +93,18 @@ public class Transaction {
         this.payment_method_id = payment_method_id;
         this.user_id = user_id;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Transaction(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String code, Double amount, Double paymentFee, Double totalAmount, Integer payment_method_id, Integer user_id, Integer status) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.code = code;
+        this.amount = amount;
+        this.paymentFee = paymentFee;
+        this.totalAmount = totalAmount;
+        this.payment_method_id = payment_method_id;
+        this.user_id = user_id;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -114,27 +171,4 @@ public class Transaction {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
-    }
 }

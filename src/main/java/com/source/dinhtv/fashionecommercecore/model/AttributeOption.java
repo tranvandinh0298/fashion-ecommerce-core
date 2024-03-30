@@ -1,30 +1,39 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
 @Entity(name="attribute_options")
-public class AttributeOption {
+public class AttributeOption extends SoftDeleting {
     @Id
     @GeneratedValue
     private Integer id;
-
-    @ManyToOne
-    private Attribute attribute;
-
+    @NotBlank
+    @Column(name="attribute_id")
+    private Integer attributeId;
+    @NotBlank
+    @Column(name="value")
     private String value;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
 
     public AttributeOption() {
     }
 
     public AttributeOption(Integer attributeId, String value) {
+        this.attributeId = attributeId;
+        this.value = value;
+    }
+
+    public AttributeOption(Date createdAt, Date updatedAt, Integer attributeId, String value) {
+        super(createdAt, updatedAt);
+        this.attributeId = attributeId;
+        this.value = value;
+    }
+
+    public AttributeOption(Date createdAt, Date updatedAt, Date deletedAt, Integer attributeId, String value) {
+        super(createdAt, updatedAt, deletedAt);
         this.attributeId = attributeId;
         this.value = value;
     }
@@ -35,13 +44,18 @@ public class AttributeOption {
         this.value = value;
     }
 
-    public AttributeOption(Integer id, Integer attributeId, String value, Date createdAt, Date updatedAt, Date deletedAt) {
+    public AttributeOption(Date createdAt, Date updatedAt, Integer id, Integer attributeId, String value) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.attributeId = attributeId;
         this.value = value;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public AttributeOption(Date createdAt, Date updatedAt, Date deletedAt, Integer id, Integer attributeId, String value) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.attributeId = attributeId;
+        this.value = value;
     }
 
     public Integer getId() {
@@ -66,29 +80,5 @@ public class AttributeOption {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
     }
 }

@@ -1,19 +1,57 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
+import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Date;
 
-public class Category {
+@Entity(name="categories")
+public class Category extends SoftDeleting {
+    @Id
+    @GeneratedValue
     private Integer id;
+    @NotBlank
+    @Column(name="name")
     private String name;
+    @NotBlank
+    @Column(name="slug")
     private String slug;
+    @NotBlank
+    @Column(name="description")
     private String description;
+    @NotBlank
+    @Column(name="status")
     private Integer status;
+    @NotBlank
+    @Column(name="image_id")
     private Integer imageId;
-    private Date createdAt;
-    private Date updatedAt;
-    private Date deletedAt;
+
+    public Category() {
+    }
 
     public Category(String name, String slug, String description, Integer status, Integer imageId) {
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.status = status;
+        this.imageId = imageId;
+    }
+
+    public Category(Date createdAt, Date updatedAt, String name, String slug, String description, Integer status, Integer imageId) {
+        super(createdAt, updatedAt);
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.status = status;
+        this.imageId = imageId;
+    }
+
+    public Category(Date createdAt, Date updatedAt, Date deletedAt, String name, String slug, String description, Integer status, Integer imageId) {
+        super(createdAt, updatedAt, deletedAt);
         this.name = name;
         this.slug = slug;
         this.description = description;
@@ -30,16 +68,24 @@ public class Category {
         this.imageId = imageId;
     }
 
-    public Category(Integer id, String name, String slug, String description, Integer status, Integer imageId, Date createdAt, Date updatedAt, Date deletedAt) {
+    public Category(Date createdAt, Date updatedAt, Integer id, String name, String slug, String description, Integer status, Integer imageId) {
+        super(createdAt, updatedAt);
         this.id = id;
         this.name = name;
         this.slug = slug;
         this.description = description;
         this.status = status;
         this.imageId = imageId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    }
+
+    public Category(Date createdAt, Date updatedAt, Date deletedAt, Integer id, String name, String slug, String description, Integer status, Integer imageId) {
+        super(createdAt, updatedAt, deletedAt);
+        this.id = id;
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.status = status;
+        this.imageId = imageId;
     }
 
     public Integer getId() {
@@ -88,29 +134,5 @@ public class Category {
 
     public void setImageId(Integer imageId) {
         this.imageId = imageId;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Date getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(Date deletedAt) {
-        this.deletedAt = deletedAt;
     }
 }
