@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.controller;
+package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.model.User;
 import com.source.dinhtv.fashionecommercecore.service.UserService;
