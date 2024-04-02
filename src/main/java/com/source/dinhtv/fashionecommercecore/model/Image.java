@@ -1,18 +1,16 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
-@Entity(name="images")
+@Entity
+@Table(name = "images")
 public class Image extends SoftDeleting {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotBlank
     @Column(name="caption")
@@ -25,6 +23,12 @@ public class Image extends SoftDeleting {
     private Integer status;
 
     public Image() {
+    }
+
+    public Image(String caption, String address) {
+        this.caption = caption;
+        this.address = address;
+        this.status = 1;
     }
 
     public Image(String caption, String address, Integer status) {

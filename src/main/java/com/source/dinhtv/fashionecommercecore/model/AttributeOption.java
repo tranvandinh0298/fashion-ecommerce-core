@@ -6,10 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
-@Entity(name="attribute_options")
+@Entity
+@Table(name="attribute_options")
 public class AttributeOption extends SoftDeleting {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotBlank
     @Column(name="attribute_id")

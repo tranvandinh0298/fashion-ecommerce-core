@@ -49,7 +49,7 @@ public class ImageService {
 
             Image image = new Image(fileName, fileLocation, 1);
 
-            this.imageRepository.createImage(image);
+            this.imageRepository.save(image);
 
             return image;
         } catch (IOException ex) {

@@ -2,9 +2,7 @@ package com.source.dinhtv.fashionecommercecore.model;
 
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import com.source.dinhtv.fashionecommercecore.model.datetime.Timestamps;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -14,10 +12,11 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
-@Entity(name="users")
+@Entity
+@Table(name="transactions")
 public class User extends Timestamps {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
