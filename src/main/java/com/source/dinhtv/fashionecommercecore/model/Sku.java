@@ -3,6 +3,7 @@ package com.source.dinhtv.fashionecommercecore.model;
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -15,10 +16,10 @@ public class Sku extends SoftDeleting {
     @NotBlank
     @Column(name="code")
     private String code;
-    @NotBlank
+    @NotNull
     @Column(name="product_id")
     private Integer productId;
-    @NotBlank
+    @NotNull
     @Column(name="quantity")
     private Integer quantity;
     @NotBlank

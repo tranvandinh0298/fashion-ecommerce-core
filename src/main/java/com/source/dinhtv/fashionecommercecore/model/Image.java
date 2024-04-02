@@ -3,6 +3,7 @@ package com.source.dinhtv.fashionecommercecore.model;
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -18,7 +19,7 @@ public class Image extends SoftDeleting {
     @NotBlank
     @Column(name="address")
     private String address;
-    @NotBlank
+    @NotNull
     @Column(name="status")
     private Integer status;
 

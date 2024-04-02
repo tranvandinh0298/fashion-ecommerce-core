@@ -3,6 +3,7 @@ package com.source.dinhtv.fashionecommercecore.model;
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -21,10 +22,10 @@ public class Category extends SoftDeleting {
     @NotBlank
     @Column(name="description")
     private String description;
-    @NotBlank
+    @NotNull
     @Column(name="status")
     private Integer status;
-    @NotBlank
+    @NotNull
     @Column(name="image_id")
     private Integer imageId;
 
