@@ -14,7 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ImageService {
@@ -28,6 +30,14 @@ public class ImageService {
         } catch (Exception ex) {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
+    }
+
+    public List<Image> getAllImages() {
+        return this.imageRepository.findAll();
+    }
+
+    public Optional<Image> getImageById(Integer id) {
+        return this.imageRepository.findById(id);
     }
 
     public Image uploadSingleFile(MultipartFile file) {
@@ -47,20 +57,28 @@ public class ImageService {
 
             data.put("fileLocation", targetLocation.toString());
 
-            Image image = new Image(fileName, fileLocation, 1);
-
-            this.imageRepository.save(image);
-
-            return image;
+            return this.saveImage(fileName, fileLocation);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 
-    public Image getImageById(Integer id) {
-            Image image = this.imageRepository.getById(id);
-            return image;
+    protected Image saveImage(String fileName, String fileLocation) {
+        Image image = new Image(fileName, fileLocation, 1);
+
+        this.imageRepository.save(image);
+
+        return image;
     }
+
+    public boolean deleteImage(Integer id) {
+        this.imageRepository.deleteById(id);
+        return true;
+    }
+
+
+
+
 
 
 }
