@@ -38,6 +38,11 @@ public class ImageController {
         return new ResponseEntity<>(this.imageService.getImageById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/caption/{name}")
+    public ResponseEntity<Optional<Image>> getImageByCaption(@PathVariable String name) {
+        return new ResponseEntity<>(this.imageService.getImageByCaption(name), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteImage(@PathVariable Integer id) {
         return new ResponseEntity<>(this.imageService.deleteImage(id), HttpStatus.OK);

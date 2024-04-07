@@ -40,6 +40,10 @@ public class ImageService {
         return this.imageRepository.findById(id);
     }
 
+    public Optional<Image> getImageByCaption(String name) {
+        return this.imageRepository.findByCaption(name);
+    }
+
     public Image uploadSingleFile(MultipartFile file) {
         Map<String, String> data = new HashMap<>();
 
@@ -69,6 +73,10 @@ public class ImageService {
         this.imageRepository.save(image);
 
         return image;
+    }
+
+    public boolean softDeleteImage(Integer id) {
+        this.imageRepository.
     }
 
     public boolean deleteImage(Integer id) {
