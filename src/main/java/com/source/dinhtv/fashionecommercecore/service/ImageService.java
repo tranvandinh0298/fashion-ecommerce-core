@@ -1,8 +1,10 @@
 package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
+import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
+import com.source.dinhtv.fashionecommercecore.utils.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,7 +18,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ImageService {
@@ -36,12 +37,12 @@ public class ImageService {
         return this.imageRepository.findAll();
     }
 
-    public Optional<Image> getImageById(Integer id) {
-        return this.imageRepository.findById(id);
+    public Image getImageById(Integer id) {
+        return this.imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
     }
 
-    public Optional<Image> getImageByCaption(String name) {
-        return this.imageRepository.findByCaption(name);
+    public Image getImageByCaption(String caption) {
+        return this.imageRepository.findByCaption(caption).orElseThrow(() -> new ResourceNotFoundException("Image not found with caption: " + caption));
     }
 
     public Image uploadSingleFile(MultipartFile file) {
@@ -76,7 +77,13 @@ public class ImageService {
     }
 
     public boolean softDeleteImage(Integer id) {
-        this.imageRepository.
+        Image existingImage = this.imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
+
+        existingImage.softDelete();
+
+        imageRepository.save(existingImage);
+
+        return false;
     }
 
     public boolean deleteImage(Integer id) {

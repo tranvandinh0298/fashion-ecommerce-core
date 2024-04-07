@@ -1,6 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.model;
 
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
+import com.source.dinhtv.fashionecommercecore.utils.CustomConstants;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -105,5 +106,15 @@ public class Image extends SoftDeleting {
 
     public void setstatus(Integer status) {
         this.status = status;
+    }
+
+    public void softDelete() {
+        this.status = CustomConstants.STATUS_RECORD_INACTIVE;
+        super.setDeletedAt();
+    }
+
+    public void restore() {
+        super.restore();
+        this.status = CustomConstants.STATUS_RECORD_ACTIVE;
     }
 }

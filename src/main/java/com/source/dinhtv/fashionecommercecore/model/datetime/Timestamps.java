@@ -1,10 +1,22 @@
 package com.source.dinhtv.fashionecommercecore.model.datetime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
+@Component
+@MappedSuperclass
 public class Timestamps {
-    private Date createdAt;
-    private Date updatedAt;
+    @CreationTimestamp
+    @Column(name="created_at", updatable = false)
+    protected Date createdAt;
+    @Column(name="updated_at", updatable = true)
+    @UpdateTimestamp
+    protected Date updatedAt;
 
     public Timestamps() {
     }

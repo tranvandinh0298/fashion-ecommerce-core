@@ -3,38 +3,40 @@ package com.source.dinhtv.fashionecommercecore.model;
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import com.source.dinhtv.fashionecommercecore.model.datetime.Timestamps;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 //import jakarta.
 
 import java.util.Date;
 
 @Entity
-@Table(name="transactions")
+@Table(name="users")
 public class User extends Timestamps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @NotBlank
     @Size(min=6, message="Tối thiểu 6 ký tự")
+    @Column(name="name")
     private String name;
 
-    @NotNull
-    @Email
+    @NotBlank
+    @Email(message = "Email không hợp lệ")
+    @Column(name="email")
     private String email;
 
     @Null
+    @Column(name="email_verified_at")
     private Date emailVerifiedAt;
 
     @NotNull
     @Size(min=6, message = "Mật khẩu tối thiểu phải có 6 ký tự")
+    @Column(name="password")
     private String password;
 
     @Null
+    @Column(name="remember_token")
     private String remember_token;
 
     public User() {
