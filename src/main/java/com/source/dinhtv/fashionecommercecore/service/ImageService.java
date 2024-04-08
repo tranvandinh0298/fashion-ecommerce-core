@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.withNonDeletedRecord;
+
 @Service
 public class ImageService {
     @Autowired
@@ -36,16 +38,12 @@ public class ImageService {
     }
 
     public List<Image> getAllImages() {
-//        Specification<Image> spec = Specification.where(
-//                        ImageSpecification.withNonDeletedRecord()
-//                );
 
-        Specification<Image> specCategory = withNonDeletedRecord();
-        Specification<Image> specPrice = ImageSpecifications.hasPriceLessThan(price);
-
-        Specification<Image> finalSpec = Specification.where(specCategory).and(specPrice);
-
+        Specification<Image> spec = Specification.where(
+                withNonDeletedRecord()
+        );
         return this.imageRepository.findAll(spec);
+
     }
 
     public Image getImageById(Integer id) {

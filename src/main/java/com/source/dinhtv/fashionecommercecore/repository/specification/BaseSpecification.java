@@ -4,8 +4,8 @@ import com.source.dinhtv.fashionecommercecore.utils.CustomConstants;
 import org.springframework.data.jpa.domain.Specification;
 
 public abstract class BaseSpecification<T> {
-    public static Specification<T> withNonDeletedRecord() {
-        return (root, query, cb) -> cb.isNull(root.get("deleted_at"));
+    public static Specification withNonDeletedRecord() {
+        return (root, query, cb) -> cb.isNull(root.get("deletedAt"));
     }
 
     public Specification<T> withDeletedRecord() {
