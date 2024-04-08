@@ -109,12 +109,12 @@ public class Image extends SoftDeleting {
     }
 
     public void softDelete() {
-        this.status = CustomConstants.STATUS_RECORD_INACTIVE;
+        this.status = CustomConstants.RECORD_STATUS_INACTIVE;
         super.setDeletedAt();
     }
 
     public void restore() {
         super.restore();
-        this.status = CustomConstants.STATUS_RECORD_ACTIVE;
+        this.status = CustomConstants.RECORD_STATUS_ACTIVE;
     }
 }

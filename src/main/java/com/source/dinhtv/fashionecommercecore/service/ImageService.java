@@ -4,8 +4,10 @@ import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
+import com.source.dinhtv.fashionecommercecore.repository.specification.ImageSpecification;
 import com.source.dinhtv.fashionecommercecore.utils.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,16 @@ public class ImageService {
     }
 
     public List<Image> getAllImages() {
-        return this.imageRepository.findAll();
+//        Specification<Image> spec = Specification.where(
+//                        ImageSpecification.withNonDeletedRecord()
+//                );
+
+        Specification<Image> specCategory = withNonDeletedRecord();
+        Specification<Image> specPrice = ImageSpecifications.hasPriceLessThan(price);
+
+        Specification<Image> finalSpec = Specification.where(specCategory).and(specPrice);
+
+        return this.imageRepository.findAll(spec);
     }
 
     public Image getImageById(Integer id) {
