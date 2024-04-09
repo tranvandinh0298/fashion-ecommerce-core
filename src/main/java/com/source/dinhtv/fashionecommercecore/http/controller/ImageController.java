@@ -35,8 +35,6 @@ public class ImageController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getImage(@PathVariable Integer id) {
 
-//        return new ResponseEntity<>(this.imageService.getImageById(id), HttpStatus.OK);
-
         return ResponseEntity.ok(this.imageService.getImageById(id));
     }
 

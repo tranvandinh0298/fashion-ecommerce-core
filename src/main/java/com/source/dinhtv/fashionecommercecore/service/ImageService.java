@@ -4,8 +4,8 @@ import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
+import com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification;
 import com.source.dinhtv.fashionecommercecore.repository.specification.ImageSpecification;
-import com.source.dinhtv.fashionecommercecore.utils.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.withNonDeletedRecord;
+import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
 
 @Service
 public class ImageService {
@@ -38,16 +36,30 @@ public class ImageService {
     }
 
     public List<Image> getAllImages() {
-
-        Specification<Image> spec = Specification.where(
-                withNonDeletedRecord()
-        );
-        return this.imageRepository.findAll(spec);
-
+        try {
+            Specification<Image> spec = combineSpecs(List.of(
+                    isNonDeletedRecord()
+            ));
+            return this.imageRepository.findAll(spec);
+        } catch (Exception ex) {
+            // Handle exceptions appropriately
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public Image getImageById(Integer id) {
-        return this.imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
+        try {
+            Specification<Image> spec = combineSpecs(List.of(
+                    hasId(id),
+                    isNonDeletedRecord()
+            ));
+            return this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: "+id));
+        } catch (Exception ex) {
+            // Handle exceptions appropriately
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public Image getImageByCaption(String caption) {
