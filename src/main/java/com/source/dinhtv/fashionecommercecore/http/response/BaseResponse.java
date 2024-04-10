@@ -8,6 +8,15 @@ public class BaseResponse<T>{
     public BaseResponse() {
     }
 
+    public BaseResponse(String resultCode) {
+        this.resultCode = resultCode;
+    }
+    public BaseResponse(String resultCode, String resultMessage) {
+        this.resultCode = resultCode;
+        this.resultMessage = resultMessage;
+    }
+
+
     public BaseResponse(String resultCode, String resultMessage, T data) {
         this.resultCode = resultCode;
         this.resultMessage = resultMessage;

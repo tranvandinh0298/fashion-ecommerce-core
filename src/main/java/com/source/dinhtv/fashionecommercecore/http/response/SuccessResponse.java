@@ -4,6 +4,7 @@ import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.RESPO
 
 public class SuccessResponse extends BaseResponse {
     public SuccessResponse() {
+        super(RESPONSE_STATUS_SUCCESS, "Success");
     }
 
     public SuccessResponse(Object data) {

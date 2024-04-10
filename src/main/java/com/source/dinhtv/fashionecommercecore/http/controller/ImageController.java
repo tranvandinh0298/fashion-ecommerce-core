@@ -1,6 +1,8 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 
+import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.ImageResponse;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,36 +22,27 @@ public class ImageController {
     private ImageService imageService;
 
     @GetMapping()
-    public ResponseEntity<List<Image>> getAllImages() {
+    public ResponseEntity<BaseResponse> getAllImages() {
         return new ResponseEntity<>(this.imageService.getAllImages(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) {
-
-        Image image = this.imageService.uploadSingleFile(file);
-
-        return new ResponseEntity<>(image, HttpStatus.OK);
+    public ResponseEntity<BaseResponse> uploadFile(@RequestParam("file") MultipartFile file) {
+        return new ResponseEntity<>(this.imageService.uploadSingleFile(file), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getImage(@PathVariable Integer id) {
-
+    public ResponseEntity<BaseResponse> getImage(@PathVariable Integer id) {
         return ResponseEntity.ok(this.imageService.getImageById(id));
     }
 
-    @GetMapping("/caption/{name}")
-    public ResponseEntity<Image> getImageByCaption(@PathVariable String name) {
-        return new ResponseEntity<>(this.imageService.getImageByCaption(name), HttpStatus.OK);
-    }
-
     @DeleteMapping("/soft-delete/{id}")
-    public ResponseEntity<Boolean> softDeleteImage(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> softDeleteImage(@PathVariable Integer id) {
         return new ResponseEntity<>(this.imageService.softDeleteImage(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteImage(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> deleteImage(@PathVariable Integer id) {
         return new ResponseEntity<>(this.imageService.deleteImage(id), HttpStatus.OK);
     }
 

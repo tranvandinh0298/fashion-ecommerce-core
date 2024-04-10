@@ -2,10 +2,11 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
+import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.ImageResponse;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
-import com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification;
-import com.source.dinhtv.fashionecommercecore.repository.specification.ImageSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,38 +36,37 @@ public class ImageService {
         }
     }
 
-    public List<Image> getAllImages() {
-        try {
+    public BaseResponse<List<ImageResponse>> getAllImages() {
             Specification<Image> spec = combineSpecs(List.of(
                     isNonDeletedRecord()
             ));
-            return this.imageRepository.findAll(spec);
-        } catch (Exception ex) {
-            // Handle exceptions appropriately
-            ex.printStackTrace();
-            return null;
-        }
+            List<Image> images = this.imageRepository.findAll(spec);
+
+            if (images == null || images.isEmpty()) {
+                throw new ResourceNotFoundException("Không tìm thấy ảnh nào");
+            }
+
+            List<ImageResponse> imagesResponse = new ArrayList<>();
+            images.forEach((image) -> {
+                imagesResponse.add(new ImageResponse(image.getId(), image.getCaption(), image.getAddress()));
+            });
+
+            return new SuccessResponse(imagesResponse);
     }
 
-    public Image getImageById(Integer id) {
-        try {
-            Specification<Image> spec = combineSpecs(List.of(
-                    hasId(id),
-                    isNonDeletedRecord()
-            ));
-            return this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: "+id));
-        } catch (Exception ex) {
-            // Handle exceptions appropriately
-            ex.printStackTrace();
-            return null;
-        }
+    public BaseResponse<ImageResponse> getImageById(Integer id) {
+        Specification<Image> spec = combineSpecs(List.of(
+            hasId(id), isNonDeletedRecord()
+        ));
+        Image image = this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: "+id));
+
+        ImageResponse imagesResponse = new ImageResponse(image.getId(), image.getCaption(), image.getAddress());
+
+        return new SuccessResponse(imagesResponse);
+
     }
 
-    public Image getImageByCaption(String caption) {
-        return this.imageRepository.findByCaption(caption).orElseThrow(() -> new ResourceNotFoundException("Image not found with caption: " + caption));
-    }
-
-    public Image uploadSingleFile(MultipartFile file) {
+    public BaseResponse<ImageResponse> uploadSingleFile(MultipartFile file) {
         Map<String, String> data = new HashMap<>();
 
         // Normalize file name
@@ -83,36 +83,36 @@ public class ImageService {
 
             data.put("fileLocation", targetLocation.toString());
 
-            return this.saveImage(fileName, fileLocation);
-        } catch (IOException ex) {
+            return new SuccessResponse(this.saveImage(fileName, fileLocation));
+        } catch (Exception ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
 
-    protected Image saveImage(String fileName, String fileLocation) {
-        Image image = new Image(fileName, fileLocation, 1);
-
-        this.imageRepository.save(image);
-
-        return image;
-    }
-
-    public boolean softDeleteImage(Integer id) {
+    public BaseResponse softDeleteImage(Integer id) {
         Image existingImage = this.imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
 
         existingImage.softDelete();
 
         imageRepository.save(existingImage);
 
-        return false;
+        return new SuccessResponse();
     }
 
-    public boolean deleteImage(Integer id) {
+    public BaseResponse deleteImage(Integer id) {
         this.imageRepository.deleteById(id);
-        return true;
+        return new SuccessResponse();
     }
 
+    protected ImageResponse saveImage(String fileName, String fileLocation) {
+        Image image = new Image(fileName, fileLocation, 1);
 
+        this.imageRepository.save(image);
+
+        ImageResponse imageResponse = new ImageResponse(image.getId(), image.getCaption(), image.getAddress());
+
+        return imageResponse;
+    }
 
 
 
