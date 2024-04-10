@@ -2,18 +2,12 @@ package com.source.dinhtv.fashionecommercecore.http.controller;
 
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.ImageResponse;
-import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("v1/api/images")
