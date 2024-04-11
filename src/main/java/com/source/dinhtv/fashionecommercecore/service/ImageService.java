@@ -39,27 +39,27 @@ public class ImageService {
     }
 
     public BaseResponse getAllImages() {
-            Specification<Image> spec = combineSpecs(List.of(
-                    isNonDeletedRecord()
-            ));
-            List<Image> images = this.imageRepository.findAll(spec);
+        Specification<Image> spec = combineSpecs(List.of(
+                isNonDeletedRecord()
+        ));
+        List<Image> images = this.imageRepository.findAll(spec);
 
-            if (images.isEmpty()) {
-                throw new ResourceNotFoundException("Không tìm thấy ảnh nào");
-            }
+        if (images.isEmpty()) {
+            throw new ResourceNotFoundException("Không tìm thấy ảnh nào");
+        }
 
-            List<ImageDTO> imagesResponse = images.stream().map(ImageMapper.mapper::mapToImageDTO).toList();
+        List<ImageDTO> imagesResponse = images.stream().map(ImageMapper.MAPPER::mapToImageDTO).toList();
 
-            return new SuccessResponse(imagesResponse);
+        return new SuccessResponse(imagesResponse);
     }
 
     public BaseResponse getImageById(Integer id) {
         Specification<Image> spec = combineSpecs(List.of(
-            hasId(id), isNonDeletedRecord()
+                hasId(id), isNonDeletedRecord()
         ));
-        Image image = this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: "+id));
+        Image image = this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: " + id));
 
-        ImageDTO imageDTO = ImageMapper.mapper.mapToImageDTO(image);
+        ImageDTO imageDTO = ImageMapper.MAPPER.mapToImageDTO(image);
 
         return new SuccessResponse(imageDTO);
 
@@ -101,10 +101,8 @@ public class ImageService {
 
         this.imageRepository.save(image);
 
-        return ImageMapper.mapper.mapToImageDTO(image);
+        return ImageMapper.MAPPER.mapToImageDTO(image);
     }
-
-
 
 
 }
