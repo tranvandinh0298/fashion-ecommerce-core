@@ -59,20 +59,19 @@ public class UserService {
     }
 
     public BaseResponse updateUser(Integer id, UserDTO userDTO) {
-        Optional<User> optionalUser  = userRepository.findById(id);
-
-        if (optionalUser .isEmpty()) {
-            throw new ResourceNotFoundException("Không tìm thấy người dùng với id: "+ id);
-        }
-
-        User existingUser = optionalUser.get();
+        User existingUser = this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng nào với id: " + id));
 
         UserMapper.MAPPER.updateUserFromUserDTO(userDTO, existingUser);
 
-        return new SuccessResponse(UserMapper.MAPPER.userToUserDTO(userRepository.save(existingUser)));
+        User updatedUser = this.userRepository.save(existingUser);
+
+        return new SuccessResponse(UserMapper.MAPPER.userToUserDTO(updatedUser));
     }
 
-    public void deleteUser(Integer id) {
+    public BaseResponse deleteUser(Integer id) {
+
         userRepository.deleteById(id);
+
+        return new SuccessResponse();
     }
 }

@@ -18,5 +18,7 @@ public interface UserMapper {
     User userDTOtoUser(UserDTO userDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "emailVerifiedAt", ignore = true)
     User updateUserFromUserDTO(UserDTO userDTO, @MappingTarget User user);
 }
