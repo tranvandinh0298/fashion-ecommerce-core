@@ -1,5 +1,6 @@
 package com.source.dinhtv.fashionecommercecore.service;
 
+import com.source.dinhtv.fashionecommercecore.exception.ResourceAlreadyExists;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
@@ -26,10 +27,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public BaseResponse getAllUsers() {
-        Specification<User> specs = combineSpecs(List.of(
-           isNonDeletedRecord()
-        ));
-        List<User> users = userRepository.findAll(specs);
+        List<User> users = userRepository.findAll();
 
         if (users.isEmpty()) {
             throw new ResourceNotFoundException("Không tìm thấy bất cứ người dùng nào");
@@ -41,38 +39,37 @@ public class UserService {
     }
 
     public BaseResponse getUserById(Integer id) {
-        Specification<User> specs = combineSpecs(List.of(
-                isNonDeletedRecord()
-        ));
-        User user = this.userRepository.findOne(specs).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng nào với id: " + id));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng nào với id: " + id));
 
         UserDTO userDTO = UserMapper.MAPPER.userToUserDTO(user);
 
         return new SuccessResponse(userDTO);
     }
 
-    public BaseResponse getUserByEmail(String email) {
-        Specification<User> specs = combineSpecs(List.of(
-                isNonDeletedRecord(),
-                hasEmail(email)
-        ));
-        User user = this.userRepository.findOne(specs).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng nào với email: " + email));
-
-        UserDTO userDTO = UserMapper.MAPPER.userToUserDTO(user);
-
-        return new SuccessResponse(userDTO);
-    }
-
-    public User createUser(User User) {
-        return userRepository.save(User);
-    }
-
-    public User updateUser(Integer id, User User) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
+    public BaseResponse createUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ResourceAlreadyExists("Email: "+ user.getEmail()+ " đã tồn tại");
         }
-        User.setId(id);
-        return userRepository.save(User);
+
+        userRepository.save(user);
+
+        UserDTO userDTO = UserMapper.MAPPER.userToUserDTO(user);
+
+        return new SuccessResponse(userDTO);
+    }
+
+    public BaseResponse updateUser(Integer id, UserDTO userDTO) {
+        Optional<User> optionalUser  = userRepository.findById(id);
+
+        if (optionalUser .isEmpty()) {
+            throw new ResourceNotFoundException("Không tìm thấy người dùng với id: "+ id);
+        }
+
+        User existingUser = optionalUser.get();
+
+        UserMapper.MAPPER.updateUserFromUserDTO(userDTO, existingUser);
+
+        return new SuccessResponse(UserMapper.MAPPER.userToUserDTO(userRepository.save(existingUser)));
     }
 
     public void deleteUser(Integer id) {

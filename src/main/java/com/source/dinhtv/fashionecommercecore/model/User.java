@@ -24,12 +24,12 @@ public class User extends Timestamps {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message = "Tên người dùng là bắt buộc")
     @Size(min=6, message="Tối thiểu 6 ký tự")
     @Column(name="name")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Email là bắt buộc")
     @Email(message = "Email không hợp lệ")
     @Column(name="email")
     private String email;
@@ -38,7 +38,7 @@ public class User extends Timestamps {
     @Column(name="email_verified_at")
     private Date emailVerifiedAt;
 
-    @NotNull
+    @NotNull(message = "Mật khẩu là bắt buộc")
     @Size(min=6, message = "Mật khẩu tối thiểu phải có 6 ký tự")
     @Column(name="password")
     private String password;

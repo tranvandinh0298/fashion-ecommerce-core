@@ -1,6 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
+import com.source.dinhtv.fashionecommercecore.exception.GlobalExceptionHandler;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
@@ -8,6 +9,8 @@ import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.ImageDTO
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.ImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -26,8 +29,7 @@ import static com.source.dinhtv.fashionecommercecore.repository.specification.Ba
 public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
-    @Autowired
-    private ImageDTO imageDTO;
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private final Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
 
     public ImageService() {

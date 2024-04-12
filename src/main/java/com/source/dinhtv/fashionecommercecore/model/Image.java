@@ -6,15 +6,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "images")
 public class Image extends SoftDeleting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

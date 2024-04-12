@@ -10,12 +10,12 @@ import org.mapstruct.factory.Mappers;
 public interface ImageMapper {
     ImageMapper MAPPER = Mappers.getMapper(ImageMapper.class);
 
-//    @Mapping(source = "id", target = "imageId")
+//    @Mapping(source = "id", target = "id")
 //    @Mapping(source = "caption", target = "caption")
 //    @Mapping(source = "address", target = "address")
     ImageDTO mapToImageDTO(Image image);
 
-//    @Mapping(source = "imageId", target = "id")
+//    @Mapping(source = "id", target = "id")
 //    @Mapping(source = "caption", target = "caption")
 //    @Mapping(source = "address", target = "address")
     Image mapToImage(ImageDTO imageDTO);

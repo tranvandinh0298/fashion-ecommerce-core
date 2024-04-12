@@ -17,7 +17,7 @@ public abstract class BaseSpecification<T> {
     }
 
     public static <T> Specification<T> isDeletedRecord() {
-        return (root, query, cb) -> cb.isNotNull(root.get("deleted_at"));
+        return (root, query, cb) -> cb.isNotNull(root.get("deletedAt"));
     }
 
     public static <T> Specification<T> withActiveRecord() {

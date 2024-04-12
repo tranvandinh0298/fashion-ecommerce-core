@@ -1,8 +1,10 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.UserDTO;
 import com.source.dinhtv.fashionecommercecore.model.User;
 import com.source.dinhtv.fashionecommercecore.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +28,14 @@ public class UserController {
         return new ResponseEntity<>(UserService.getUserById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<BaseResponse> getUserByEmail(@PathVariable String email) {
-        return new ResponseEntity<>(UserService.getUserByEmail(email), HttpStatus.OK);
-    }
-
     @PostMapping
-    public User createUser(@RequestBody User User) {
-        return UserService.createUser(User);
+    public ResponseEntity<BaseResponse> createUser(@Valid @RequestBody User user) {
+        return new ResponseEntity<>(UserService.createUser(user), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Integer id, @RequestBody User User) {
-        return UserService.updateUser(id, User);
+    @PatchMapping("/{id}")
+    public ResponseEntity<BaseResponse> updateUser(@PathVariable Integer id,@Valid @RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(UserService.updateUser(id, userDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")

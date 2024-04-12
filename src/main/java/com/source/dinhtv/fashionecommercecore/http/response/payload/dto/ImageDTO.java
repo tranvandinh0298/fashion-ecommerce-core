@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class ImageDTO {
-    public Integer imageId;
+    public Integer id;
     public String caption;
     public String address;
 }
