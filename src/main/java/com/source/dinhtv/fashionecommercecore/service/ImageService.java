@@ -3,19 +3,33 @@ package com.source.dinhtv.fashionecommercecore.service;
 import com.source.dinhtv.fashionecommercecore.exception.FileStorageException;
 import com.source.dinhtv.fashionecommercecore.exception.GlobalExceptionHandler;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
+import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.ImageDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.ImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
+import com.source.dinhtv.fashionecommercecore.utils.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +38,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_LIMIT;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_NUMBER;
+import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ImageService {
@@ -40,19 +59,43 @@ public class ImageService {
         }
     }
 
-    public BaseResponse getAllImages() {
+    public BaseResponse getAllImages(Integer pageNum, Integer pageSize) {
+        verifyPageNumAndSize(pageNum,pageSize);
+
         Specification<Image> spec = combineSpecs(List.of(
                 isNonDeletedRecord()
         ));
-        List<Image> images = this.imageRepository.findAll(spec);
+        Page<Image> imagePage = this.imageRepository.findAll(spec, PageRequest.of(pageNum,pageSize));
 
-        if (images.isEmpty()) {
+        if (imagePage.isEmpty()) {
             throw new ResourceNotFoundException("Không tìm thấy ảnh nào");
         }
 
-        List<ImageDTO> imagesResponse = images.stream().map(ImageMapper.MAPPER::mapToImageDTO).toList();
+        List<EntityModel<ImageDTO>> imageEntities = imagePage.stream().map(
+                image -> EntityModel.of(
+                        ImageMapper.MAPPER.mapToImageDTO(image),
+                        linkTo(methodOn(ImageController.class).getImage(image.getId())).withSelfRel()
+                )
+        ).toList();
 
-        return new SuccessResponse(imagesResponse);
+                // Create pagination metadata
+//        PagedModel.PageMetadata metadata = getPageMetaData(imagePage);
+
+        // Add pagination links
+//        List<Link> paginationLinks = linkTo(methodOn(ImageController.class).getAllImages(1, limit));
+
+//        PagedModel<EntityModel<ImageDTO>> pagedModel = PagedModel.of(imageEntities, metadata);
+//        paginationLinks.forEach(pagedModel::add);
+
+//        Link link = linkTo(.getAllImages()));
+
+//        CollectionModel<EntityModel<ImageDTO>> imageCollection = CollectionModel.of(imageEntities, link);
+
+//        PagedResourcesAssembler
+
+        PagedModel<EntityModel<ImageDTO>> pagedModel = getPagedModel(imageEntities, pageNum, pageSize, imagePage.getTotalElements(), imagePage.getTotalPages());;
+
+        return new SuccessResponse(pagedModel);
     }
 
     public BaseResponse getImageById(Integer id) {
@@ -63,7 +106,11 @@ public class ImageService {
 
         ImageDTO imageDTO = ImageMapper.MAPPER.mapToImageDTO(image);
 
-        return new SuccessResponse(imageDTO);
+        Link allImagesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
+
+        EntityModel<ImageDTO> imageEntity = EntityModel.of(imageDTO, allImagesLink);
+
+        return new SuccessResponse(imageEntity);
 
     }
 
@@ -105,6 +152,5 @@ public class ImageService {
 
         return ImageMapper.MAPPER.mapToImageDTO(image);
     }
-
 
 }

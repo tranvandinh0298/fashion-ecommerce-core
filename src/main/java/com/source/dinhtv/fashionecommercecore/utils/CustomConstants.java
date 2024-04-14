@@ -6,4 +6,7 @@ public class CustomConstants {
     public static final String RESPONSE_STATUS_SUCCESS = "200";
     public static final String RESPONSE_STATUS_FAIL = "11";
     public static final String RESPONSE_STATUS_PENDING = "99";
+
+    public static final String DEFAULT_PAGE_NUMBER = "0";
+    public static final String DEFAULT_PAGE_LIMIT = "10";
 }

@@ -54,18 +54,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(RestAPIException.class)
+    public ResponseEntity<BaseResponse<Object>> handleRestAPIException(Exception ex) {
+        logger.error("An unexpected error occurred", ex);
+        BaseResponse<Object> response = new ErrorResponse();
+        response.setResultMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Object>> handleException(Exception ex) {
         logger.error("An unexpected error occurred", ex);
         BaseResponse<Object> response = new PendingResponse();
-        if (ex instanceof MethodArgumentNotValidException) {
-            List<String> errors = ((MethodArgumentNotValidException) ex).getFieldErrors().stream().map(fieldError -> fieldError.toString()).toList();
-            logger.info(errors.toString());
-//            return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-            response.setResultMessage("Validate error");
-        } else {
+//        if (ex instanceof MethodArgumentNotValidException) {
+//            List<String> errors = ((MethodArgumentNotValidException) ex).getFieldErrors().stream().map(fieldError -> fieldError.toString()).toList();
+//            logger.info(errors.toString());
+////            return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+//            response.setResultMessage("Validate error");
+//        } else {
             response.setResultMessage(ex.getMessage());
-        }
+//        }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

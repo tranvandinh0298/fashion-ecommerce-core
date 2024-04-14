@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_LIMIT;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_NUMBER;
+
 @RestController
 @RequestMapping("v1/api/images")
 public class ImageController {
@@ -16,8 +19,10 @@ public class ImageController {
     private ImageService imageService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> getAllImages() {
-        return new ResponseEntity<>(this.imageService.getAllImages(), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> getAllImages(
+            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
+            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) Integer limit) {
+        return new ResponseEntity<>(this.imageService.getAllImages(page, limit), HttpStatus.OK);
     }
 
     @PostMapping()
