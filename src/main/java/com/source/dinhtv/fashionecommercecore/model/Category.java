@@ -33,7 +33,7 @@ public class Category extends SoftDeleting {
     @NotNull
     @Column(name="status")
     private Integer status;
-    @NotNull
-    @Column(name="image_id")
-    private Integer imageId;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 }

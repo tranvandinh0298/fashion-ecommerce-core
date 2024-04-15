@@ -48,6 +48,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private ImageMapper imageMapper;
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private final Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
 
@@ -73,25 +75,10 @@ public class ImageService {
 
         List<EntityModel<ImageDTO>> imageEntities = imagePage.stream().map(
                 image -> EntityModel.of(
-                        ImageMapper.MAPPER.mapToImageDTO(image),
+                        imageMapper.mapToImageDTO(image),
                         linkTo(methodOn(ImageController.class).getImage(image.getId())).withSelfRel()
                 )
         ).toList();
-
-                // Create pagination metadata
-//        PagedModel.PageMetadata metadata = getPageMetaData(imagePage);
-
-        // Add pagination links
-//        List<Link> paginationLinks = linkTo(methodOn(ImageController.class).getAllImages(1, limit));
-
-//        PagedModel<EntityModel<ImageDTO>> pagedModel = PagedModel.of(imageEntities, metadata);
-//        paginationLinks.forEach(pagedModel::add);
-
-//        Link link = linkTo(.getAllImages()));
-
-//        CollectionModel<EntityModel<ImageDTO>> imageCollection = CollectionModel.of(imageEntities, link);
-
-//        PagedResourcesAssembler
 
         PagedModel<EntityModel<ImageDTO>> pagedModel = getPagedModel(imageEntities, pageNum, pageSize, imagePage.getTotalElements(), imagePage.getTotalPages());;
 
@@ -104,7 +91,7 @@ public class ImageService {
         ));
         Image image = this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: " + id));
 
-        ImageDTO imageDTO = ImageMapper.MAPPER.mapToImageDTO(image);
+        ImageDTO imageDTO = imageMapper.mapToImageDTO(image);
 
         Link allImagesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
 
@@ -150,7 +137,7 @@ public class ImageService {
 
         this.imageRepository.save(image);
 
-        return ImageMapper.MAPPER.mapToImageDTO(image);
+        return imageMapper.mapToImageDTO(image);
     }
 
 }
