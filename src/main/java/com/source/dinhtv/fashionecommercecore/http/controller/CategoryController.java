@@ -2,9 +2,6 @@ package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.CategoryDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.UserDTO;
-import com.source.dinhtv.fashionecommercecore.model.Category;
-import com.source.dinhtv.fashionecommercecore.model.User;
 import com.source.dinhtv.fashionecommercecore.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +42,7 @@ public class CategoryController {
 
     @DeleteMapping("/soft-delete/{id}")
     public ResponseEntity<BaseResponse> softDeleteCategory(@PathVariable Integer id) {
-        return new ResponseEntity<>(categoryService.softDeleteImage(id), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.softDeleteCategory(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

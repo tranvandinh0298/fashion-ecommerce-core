@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +29,8 @@ public class Attribute extends SoftDeleting {
     @Size(min=1,message = "Tên thuộc tính phải lớn 1 ký tự")
     @Column(name="name")
     private String name;
+
+    @OneToMany
+    @JoinColumn(name = "attribute_id")
+    private List<AttributeOption> options;
 }

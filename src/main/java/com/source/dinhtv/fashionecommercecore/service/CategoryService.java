@@ -6,14 +6,9 @@ import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.CategoryDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.UserDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.CategoryMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.UserMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
-import com.source.dinhtv.fashionecommercecore.model.Image;
-import com.source.dinhtv.fashionecommercecore.model.User;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
-import com.source.dinhtv.fashionecommercecore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +18,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
@@ -97,7 +91,7 @@ public class CategoryService {
         return new SuccessResponse(categoryMapper.mapToCategoryDTO(existedCategory));
     }
 
-    public BaseResponse softDeleteImage(Integer id) {
+    public BaseResponse softDeleteCategory(Integer id) {
         Category existingCategory = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
 
         existingCategory.softDelete();

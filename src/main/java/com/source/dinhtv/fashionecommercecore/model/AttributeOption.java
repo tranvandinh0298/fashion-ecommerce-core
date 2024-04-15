@@ -20,9 +20,11 @@ public class AttributeOption extends SoftDeleting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
-    @Column(name="attribute_id")
-    private Integer attributeId;
+
+    @OneToOne
+    @JoinColumn(name = "attribute_id")
+    private Attribute attribute;
+
     @NotBlank
     @Column(name="value")
     private String value;
