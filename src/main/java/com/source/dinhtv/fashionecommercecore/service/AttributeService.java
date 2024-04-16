@@ -40,19 +40,19 @@ public class AttributeService {
         Specification<Attribute> specs = combineSpecs(List.of(
                 isNonDeletedRecord()
         ));
-        Page<Attribute> categoriesPage = attributeRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
+        Page<Attribute> attributesPage = attributeRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
 
-        if (categoriesPage.isEmpty()) {
+        if (attributesPage.isEmpty()) {
             throw new ResourceNotFoundException("Không tìm thấy thuộc tính nào");
         }
 
-        List<EntityModel<AttributeDTO>> attributeEntities = categoriesPage.stream().map(
+        List<EntityModel<AttributeDTO>> attributeEntities = attributesPage.stream().map(
                 attribute -> EntityModel.of(
                         attributeMapper.mapToAttributeDTO(attribute),
                         linkTo(methodOn(AttributeController.class).getAttributeById(attribute.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<AttributeDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, categoriesPage.getTotalElements(), categoriesPage.getTotalPages());
+        PagedModel<EntityModel<AttributeDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, attributesPage.getTotalElements(), attributesPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
 
@@ -66,9 +66,9 @@ public class AttributeService {
 
         AttributeDTO attributeDTO = attributeMapper.mapToAttributeDTO(attribute);
 
-        Link allCategoriesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
+        Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
 
-        EntityModel<AttributeDTO> attributeEntity = EntityModel.of(attributeDTO, allCategoriesLink);
+        EntityModel<AttributeDTO> attributeEntity = EntityModel.of(attributeDTO, allAttributesLink);
 
         return new SuccessResponse(attributeEntity);
     }
@@ -82,13 +82,13 @@ public class AttributeService {
     }
 
     public BaseResponse updateAttribute(Integer id, AttributeDTO attributeDTO) {
-        Attribute existedattribute = attributeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+        Attribute existedAttribute = attributeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
 
-        attributeMapper.updateFromAttributeDTO(attributeDTO, existedattribute);
+        attributeMapper.updateFromAttributeDTO(attributeDTO, existedAttribute);
 
-        attributeRepository.save(existedattribute);
+        attributeRepository.save(existedAttribute);
 
-        return new SuccessResponse(attributeMapper.mapToAttributeDTO(existedattribute));
+        return new SuccessResponse(attributeMapper.mapToAttributeDTO(existedAttribute));
     }
 
     public BaseResponse softDeleteAttribute(Integer id) {

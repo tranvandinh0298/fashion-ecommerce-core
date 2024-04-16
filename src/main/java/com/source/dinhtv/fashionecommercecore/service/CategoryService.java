@@ -66,7 +66,7 @@ public class CategoryService {
 
         CategoryDTO categoryDTO = categoryMapper.mapToCategoryDTO(category);
 
-        Link allCategoriesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
+        Link allCategoriesLink = linkTo(methodOn(CategoryController.class).getAllCategories(0,10)).withRel("allCategories");
 
         EntityModel<CategoryDTO> categoryEntity = EntityModel.of(categoryDTO, allCategoriesLink);
 
