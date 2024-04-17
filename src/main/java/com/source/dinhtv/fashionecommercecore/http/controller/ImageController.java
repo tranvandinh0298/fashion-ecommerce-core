@@ -20,8 +20,8 @@ public class ImageController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse> getAllImages(
-            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) Integer limit) {
+            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) int limit) {
         return new ResponseEntity<>(this.imageService.getAllImages(page, limit), HttpStatus.OK);
     }
 
@@ -31,17 +31,17 @@ public class ImageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getImage(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> getImage(@PathVariable int id) {
         return ResponseEntity.ok(this.imageService.getImageById(id));
     }
 
     @DeleteMapping("/soft-delete/{id}")
-    public ResponseEntity<BaseResponse> softDeleteImage(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> softDeleteImage(@PathVariable int id) {
         return new ResponseEntity<>(this.imageService.softDeleteImage(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse> deleteImage(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> deleteImage(@PathVariable int id) {
         return new ResponseEntity<>(this.imageService.deleteImage(id), HttpStatus.OK);
     }
 

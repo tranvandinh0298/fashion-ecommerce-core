@@ -20,13 +20,13 @@ public class CategoryController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse> getAllCategories(
-            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) Integer limit) {
+            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) int limit) {
         return new ResponseEntity<>(this.categoryService.getAllCategories(page, limit), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> getCategoryById(@PathVariable int id) {
         return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
     }
 
@@ -36,17 +36,17 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BaseResponse> updateCategory(@PathVariable Integer id,@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<BaseResponse> updateCategory(@PathVariable int id,@Valid @RequestBody CategoryDTO categoryDTO) {
         return new ResponseEntity<>(categoryService.updateCategory(id, categoryDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/soft-delete/{id}")
-    public ResponseEntity<BaseResponse> softDeleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> softDeleteCategory(@PathVariable int id) {
         return new ResponseEntity<>(categoryService.softDeleteCategory(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse> deleteCategory(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> deleteCategory(@PathVariable int id) {
         return new ResponseEntity<>(categoryService.deleteCategory(id), HttpStatus.ACCEPTED);
     }
 }

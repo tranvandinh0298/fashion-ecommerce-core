@@ -11,11 +11,12 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {AttributeOptionMapper.class})
 public interface AttributeMapper {
+    @Mapping(source = "options", target = "optionDTOs")
     AttributeDTO mapToAttributeDTO(Attribute attribute);
 
+    @Mapping(source = "optionDTOs", target = "options")
     Attribute mapToAttribute(AttributeDTO attributeDTO);
 
     @Mapping(target = "id", ignore = true)
-//    @Mapping(source = "AttributeDTO.imageDTO", target = "category.image")
     Attribute updateFromAttributeDTO(AttributeDTO attributeDTO, @MappingTarget Attribute attribute);
 }

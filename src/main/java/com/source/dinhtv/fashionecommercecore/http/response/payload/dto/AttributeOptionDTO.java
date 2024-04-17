@@ -16,5 +16,4 @@ import java.util.List;
 public class AttributeOptionDTO {
     public Integer id;
     public String value;
-    public AttributeDTO attributeDTO;
 }

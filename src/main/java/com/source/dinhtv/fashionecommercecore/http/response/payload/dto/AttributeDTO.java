@@ -17,5 +17,5 @@ import java.util.List;
 public class AttributeDTO {
     public Integer id;
     public String name;
-    public List<AttributeOptionDTO> optionDTOS;
+    public List<AttributeOptionDTO> optionDTOs;
 }

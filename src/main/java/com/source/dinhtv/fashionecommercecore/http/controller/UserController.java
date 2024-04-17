@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> getUserById(@PathVariable int id) {
         return new ResponseEntity<>(UserService.getUserById(id), HttpStatus.OK);
     }
 
@@ -34,12 +34,12 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BaseResponse> updateUser(@PathVariable Integer id,@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<BaseResponse> updateUser(@PathVariable int id,@Valid @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(UserService.updateUser(id, userDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<BaseResponse> deleteUser(@PathVariable int id) {
         return new ResponseEntity<>(UserService.deleteUser(id), HttpStatus.ACCEPTED);
     }
 }

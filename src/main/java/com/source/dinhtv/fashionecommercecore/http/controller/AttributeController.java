@@ -1,6 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeOptionDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.CategoryDTO;
@@ -8,6 +9,7 @@ import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.UserDTO;
 import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.model.User;
+import com.source.dinhtv.fashionecommercecore.service.AttributeOptionService;
 import com.source.dinhtv.fashionecommercecore.service.AttributeService;
 import com.source.dinhtv.fashionecommercecore.service.CategoryService;
 import jakarta.validation.Valid;
@@ -29,13 +31,13 @@ public class AttributeController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse> getAllAttributes(
-            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) Integer limit) {
+            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) int limit) {
         return new ResponseEntity<>(attributeService.getAllAttributes(page, limit), HttpStatus.OK);
     }
 
-    @GetMapping("/attributeId")
-    public ResponseEntity<BaseResponse> getAttributeById(@PathVariable Integer attributeId) {
+    @GetMapping("/{attributeId}")
+    public ResponseEntity<BaseResponse> getAttributeById(@PathVariable int attributeId) {
         return new ResponseEntity<>(attributeService.getAttributeById(attributeId), HttpStatus.OK);
     }
 
@@ -44,50 +46,18 @@ public class AttributeController {
         return new ResponseEntity<>(attributeService.createAttribute(attributeDTO), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/attributeId")
-    public ResponseEntity<BaseResponse> updateAttribute(@PathVariable Integer attributeId,@Valid @RequestBody AttributeDTO attributeDTO) {
+    @PatchMapping("/{attributeId}")
+    public ResponseEntity<BaseResponse> updateAttribute(@PathVariable int attributeId,@Valid @RequestBody AttributeDTO attributeDTO) {
         return new ResponseEntity<>(attributeService.updateAttribute(attributeId, attributeDTO), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/soft-delete/attributeId")
-    public ResponseEntity<BaseResponse> softDeleteAttribute(@PathVariable Integer attributeId) {
+    @DeleteMapping("/soft-delete/{attributeId}")
+    public ResponseEntity<BaseResponse> softDeleteAttribute(@PathVariable int attributeId) {
         return new ResponseEntity<>(attributeService.softDeleteAttribute(attributeId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/attributeId")
-    public ResponseEntity<BaseResponse> deleteAttribute(@PathVariable Integer attributeId) {
-        return new ResponseEntity<>(attributeService.deleteAttribute(attributeId), HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/options")
-    public ResponseEntity<BaseResponse> getAllAttributeOptions(
-            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) Integer limit) {
-        return new ResponseEntity<>(attributeService.getAllAttributes(page, limit), HttpStatus.OK);
-    }
-
-    @GetMapping("/attributeId/options/{optionId}")
-    public ResponseEntity<BaseResponse> getAttributeOptionById(@PathVariable Integer attributeId, @PathVariable Integer optionId) {
-        return new ResponseEntity<>(attributeService.getAttributeById(attributeId), HttpStatus.OK);
-    }
-
-    @PostMapping("/attributeId/options")
-    public ResponseEntity<BaseResponse> createAttributeOption(@Valid @RequestBody AttributeDTO attributeDTO, @Valid @RequestBody List<AttributeOptionDTO> attributeOptionDTO) {
-        return new ResponseEntity<>(attributeService.createAttribute(attributeDTO), HttpStatus.CREATED);
-    }
-
-    @PatchMapping("/attributeId/options/{optionId}")
-    public ResponseEntity<BaseResponse> updateAttribute(@PathVariable Integer attributeId,@Valid @RequestBody AttributeDTO attributeDTO) {
-        return new ResponseEntity<>(attributeService.updateAttribute(attributeId, attributeDTO), HttpStatus.ACCEPTED);
-    }
-
-    @DeleteMapping("/soft-delete/attributeId")
-    public ResponseEntity<BaseResponse> softDeleteAttribute(@PathVariable Integer attributeId) {
-        return new ResponseEntity<>(attributeService.softDeleteAttribute(attributeId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/attributeId")
-    public ResponseEntity<BaseResponse> deleteAttribute(@PathVariable Integer attributeId) {
+    @DeleteMapping("/{attributeId}")
+    public ResponseEntity<BaseResponse> deleteAttribute(@PathVariable int attributeId) {
         return new ResponseEntity<>(attributeService.deleteAttribute(attributeId), HttpStatus.ACCEPTED);
     }
 }

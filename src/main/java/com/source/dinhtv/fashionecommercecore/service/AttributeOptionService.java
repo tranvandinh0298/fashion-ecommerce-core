@@ -2,6 +2,7 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.AttributeController;
+import com.source.dinhtv.fashionecommercecore.http.controller.AttributeOptionController;
 import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
@@ -12,6 +13,8 @@ import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.Attri
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
 import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
+import com.source.dinhtv.fashionecommercecore.repository.AttributeRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Attr;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository.withAttributeId;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.verifyPageNumAndSize;
@@ -33,77 +38,110 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class AttributeOptionService {
     @Autowired
+    private AttributeRepository attributeRepository;
+    @Autowired
+    private AttributeMapper attributeMapper;
+    @Autowired
     private AttributeOptionRepository optionRepository;
     @Autowired
     private AttributeOptionMapper optionMapper;
 
-    public List<EntityModel<AttributeOptionDTO>> getAllAttributeOptions(int pageNum, int pageSize) {
+    public BaseResponse getAllAttributeOptions(int attributeId, int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
 
         Specification<AttributeOption> specs = combineSpecs(List.of(
+                withAttributeId(attributeId),
                 isNonDeletedRecord()
         ));
         Page<AttributeOption> optionsPage = optionRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
 
         if (optionsPage.isEmpty()) {
-            throw new ResourceNotFoundException("Không tìm thấy tùy chọn nào");
+            throw new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn nào");
         }
 
         List<EntityModel<AttributeOptionDTO>> optionEntities = optionsPage.stream().map(
                 option -> EntityModel.of(
                         optionMapper.mapToAttributeOptionDTO(option),
-                        linkTo(methodOn(AttributeController.class).getAttributeById(option.getId())).withSelfRel())
+                        linkTo(methodOn(AttributeOptionController.class).getAttributeOptionById(attributeId, option.getId())).withSelfRel())
         ).toList();
 
-        return optionEntities;
+        PagedModel<EntityModel<AttributeOptionDTO>> pagedModel = getPagedModel(optionEntities,pageNum,pageSize, optionsPage.getTotalElements(), optionsPage.getTotalPages());
 
+        Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
+
+        pagedModel.add(attributeLink);
+
+        return new SuccessResponse(pagedModel);
     }
 
-    public BaseResponse getAttributeOptionById(Integer id) {
+    public BaseResponse getAttributeOptionById(Integer attributeId, Integer optionId) {
         Specification<AttributeOption> spec = combineSpecs(List.of(
-                hasId(id), isNonDeletedRecord()
+                withAttributeId(attributeId),
+                hasId(optionId), isNonDeletedRecord()
         ));
-        AttributeOption option = optionRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy tùy chọn cần tìm với id: " + id));
+        AttributeOption option = optionRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn cần tìm với id: " + optionId));
 
         AttributeOptionDTO attributeOptionDTO = optionMapper.mapToAttributeOptionDTO(option);
 
-        Link allCategoriesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
+        Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
+        Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
+        Link allAttributeOptionsLink = linkTo(methodOn(AttributeOptionController.class).getAllAttributeOptions(attributeId, 0, 10)).withRel("allAttributeOptionsLink");
 
-        EntityModel<AttributeDTO> attributeEntity = EntityModel.of(attributeDTO, allCategoriesLink);
+        EntityModel<AttributeOptionDTO> attributeEntity = EntityModel.of(attributeOptionDTO, allAttributesLink, attributeLink, allAttributeOptionsLink);
 
         return new SuccessResponse(attributeEntity);
     }
 
-    public BaseResponse createAttribute(AttributeDTO attributeDTO) {
-        Attribute attribute = attributeMapper.mapToAttribute(attributeDTO);
+    public BaseResponse createAttributeOption(int attributeId, AttributeOptionDTO optionDTO) {
+        AttributeOption option = optionMapper.mapToAttributeOption(optionDTO);
 
-        attributeOptionRepository.save(attribute);
+        Attribute attribute = this.attributeRepository.findOne(combineSpecs(List.of(
+                hasId(attributeId), isNonDeletedRecord()
+        ))).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + attributeId));
 
-        return new SuccessResponse(attributeMapper.mapToAttributeDTO(attribute));
+        option.setAttribute(attribute);
+
+        optionRepository.save(option);
+
+        return new SuccessResponse(optionMapper.mapToAttributeOptionDTO(option));
     }
 
-    public BaseResponse updateAttribute(Integer id, AttributeDTO attributeDTO) {
-        Attribute existedattribute = attributeOptionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+    public BaseResponse updateAttributeOption(Integer attributeId, Integer optionId, AttributeOptionDTO optionDTO) {
+        Specification<AttributeOption> spec = combineSpecs(List.of(
+                withAttributeId(attributeId),
+                hasId(optionId), isNonDeletedRecord()
+        ));
+        AttributeOption option = optionRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn cần tìm với id: " + optionId));
 
-        attributeMapper.updateFromAttributeDTO(attributeDTO, existedattribute);
+        optionMapper.updateFromAttributeOptionDTO(optionDTO, option);
 
-        attributeOptionRepository.save(existedattribute);
+        optionRepository.save(option);
 
-        return new SuccessResponse(attributeMapper.mapToAttributeDTO(existedattribute));
+        return new SuccessResponse(optionMapper.mapToAttributeOptionDTO(option));
     }
 
-    public BaseResponse softDeleteAttribute(Integer id) {
-        Attribute existingAttribute = attributeOptionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+    public BaseResponse softDeleteAttributeOption(int attributeId, int optionId) {
+        Specification<AttributeOption> spec = combineSpecs(List.of(
+                withAttributeId(attributeId),
+                hasId(optionId), isNonDeletedRecord()
+        ));
+        AttributeOption option = optionRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn cần tìm với id: " + optionId));
 
-        existingAttribute.softDelete();
+        option.softDelete();
 
-        attributeOptionRepository.save(existingAttribute);
+        optionRepository.save(option);
 
         return new SuccessResponse();
     }
 
-    public BaseResponse deleteAttribute(Integer id) {
-        attributeOptionRepository.deleteById(id);
+    public BaseResponse deleteAttributeOption(Integer attributeId, Integer optionId) {
+        Specification<AttributeOption> spec = combineSpecs(List.of(
+                withAttributeId(attributeId),
+                hasId(optionId), isNonDeletedRecord()
+        ));
+        AttributeOption option = optionRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn cần tìm với id: " + optionId));
+
+        optionRepository.deleteById(optionId);
 
         return new SuccessResponse();
     }
