@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,19 +22,34 @@ public class Product extends SoftDeleting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotBlank
     @Column(name="name")
     private String name;
+
     @NotBlank
     @Column(name="slug")
     private String slug;
+
     @NotBlank
     @Column(name="code")
     private String code;
+
     @NotBlank
     @Column(name="description")
     private String description;
+
     @NotNull
     @Column(name="status")
     private Integer status;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Sku> skus;
+
+    @OneToMany
+    @JoinTable(name = "image_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private List<Image> images;
 }

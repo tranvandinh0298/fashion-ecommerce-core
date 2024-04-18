@@ -20,4 +20,8 @@ public interface AttributeOptionRepository extends JpaRepository<AttributeOption
     public static Specification<AttributeOption> withAttributeId(Integer attributeId) {
         return (root, query, cb) -> cb.equal(root.get("attribute").get("id"), attributeId);
     }
+
+    public static Specification<AttributeOption> withNonDeletedAttribute() {
+        return (root, query, cb) -> cb.isNull(root.get("attribute").get("deletedAt"));
+    }
 }

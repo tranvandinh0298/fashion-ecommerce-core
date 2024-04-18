@@ -58,13 +58,10 @@ public class CategoryService {
 
     }
 
-    public BaseResponse getCategoryById(Integer id) {
-        Specification<Category> spec = combineSpecs(List.of(
-                hasId(id), isNonDeletedRecord()
-        ));
-        Category category = this.categoryRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
+    public BaseResponse getCategoryById(int id) {
+        Category existedCategory = findByIdOrThrowEx(id);
 
-        CategoryDTO categoryDTO = categoryMapper.mapToCategoryDTO(category);
+        CategoryDTO categoryDTO = categoryMapper.mapToCategoryDTO(existedCategory);
 
         Link allCategoriesLink = linkTo(methodOn(CategoryController.class).getAllCategories(0,10)).withRel("allCategories");
 
@@ -81,8 +78,8 @@ public class CategoryService {
         return new SuccessResponse(categoryMapper.mapToCategoryDTO(category));
     }
 
-    public BaseResponse updateCategory(Integer id, CategoryDTO categoryDTO) {
-        Category existedCategory = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
+    public BaseResponse updateCategory(int id, CategoryDTO categoryDTO) {
+        Category existedCategory = findByIdOrThrowEx(id);
 
         categoryMapper.updateCategoryFromCategoryDTO(categoryDTO, existedCategory);
 
@@ -91,19 +88,27 @@ public class CategoryService {
         return new SuccessResponse(categoryMapper.mapToCategoryDTO(existedCategory));
     }
 
-    public BaseResponse softDeleteCategory(Integer id) {
-        Category existingCategory = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
+    public BaseResponse softDeleteCategory(int id) {
+        Category existedCategory = findByIdOrThrowEx(id);
 
-        existingCategory.softDelete();
+        existedCategory.softDelete();
 
-        categoryRepository.save(existingCategory);
+        categoryRepository.save(existedCategory);
 
         return new SuccessResponse();
     }
 
-    public BaseResponse deleteCategory(Integer id) {
+    public BaseResponse deleteCategory(int id) {
         categoryRepository.deleteById(id);
 
         return new SuccessResponse();
+    }
+
+    private Category findByIdOrThrowEx(int id) {
+        Specification<Category> spec = combineSpecs(List.of(
+                hasId(id),
+                isNonDeletedRecord()
+        ));
+        return this.categoryRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
     }
 }

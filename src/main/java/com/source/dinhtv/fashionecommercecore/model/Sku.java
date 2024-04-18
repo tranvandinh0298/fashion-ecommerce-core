@@ -10,27 +10,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="skus")
+@Table(name = "skus")
 public class Sku extends SoftDeleting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotBlank
-    @Column(name="code")
+    @Column(name = "code")
     private String code;
+
     @NotNull
-    @Column(name="product_id")
-    private Integer productId;
-    @NotNull
-    @Column(name="quantity")
+    @Column(name = "quantity")
     private Integer quantity;
-    @NotBlank
-    @Column(name="price")
+
+    @NotNull
+    @Column(name = "price")
     private Double price;
+
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToMany
+    @JoinTable(name = "attribute_option_sku",
+            joinColumns = @JoinColumn(name = "sku_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribute_option_id")
+    )
+    private List<AttributeOption> options;
 }

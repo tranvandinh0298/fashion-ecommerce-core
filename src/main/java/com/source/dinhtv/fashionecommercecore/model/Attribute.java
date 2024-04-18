@@ -30,7 +30,6 @@ public class Attribute extends SoftDeleting {
     @Column(name="name")
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "attribute_id")
+    @OneToMany(mappedBy = "attribute", cascade = CascadeType.REMOVE)
     private List<AttributeOption> options;
 }

@@ -9,4 +9,7 @@ public class CustomConstants {
 
     public static final String DEFAULT_PAGE_NUMBER = "0";
     public static final String DEFAULT_PAGE_LIMIT = "10";
+
+    public static final String CATEGORY_TYPE = "0";
+    public static final String COLLECTION_TYPE = "1";
 }

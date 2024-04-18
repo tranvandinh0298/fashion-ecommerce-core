@@ -8,6 +8,8 @@ import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.AttributeMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
+import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
+import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository.withAttributeId;
+import static com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository.withNonDeletedAttribute;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.isNonDeletedRecord;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;
@@ -31,6 +35,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class AttributeService {
     @Autowired
     private AttributeRepository attributeRepository;
+    @Autowired
+    private AttributeOptionRepository optionRepository;
     @Autowired
     private AttributeMapper attributeMapper;
 
@@ -58,11 +64,8 @@ public class AttributeService {
 
     }
 
-    public BaseResponse getAttributeById(Integer id) {
-        Specification<Attribute> spec = combineSpecs(List.of(
-                hasId(id), isNonDeletedRecord()
-        ));
-        Attribute attribute = this.attributeRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+    public BaseResponse getAttributeById(int id) {
+        Attribute attribute = findByIdOrThrowEx(id);
 
         AttributeDTO attributeDTO = attributeMapper.mapToAttributeDTO(attribute);
 
@@ -81,8 +84,8 @@ public class AttributeService {
         return new SuccessResponse(attributeMapper.mapToAttributeDTO(attribute));
     }
 
-    public BaseResponse updateAttribute(Integer id, AttributeDTO attributeDTO) {
-        Attribute existedAttribute = attributeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+    public BaseResponse updateAttribute(int id, AttributeDTO attributeDTO) {
+        Attribute existedAttribute = findByIdOrThrowEx(id);
 
         attributeMapper.updateFromAttributeDTO(attributeDTO, existedAttribute);
 
@@ -91,8 +94,8 @@ public class AttributeService {
         return new SuccessResponse(attributeMapper.mapToAttributeDTO(existedAttribute));
     }
 
-    public BaseResponse softDeleteAttribute(Integer id) {
-        Attribute existingAttribute = attributeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
+    public BaseResponse softDeleteAttribute(int id) {
+        Attribute existingAttribute = findByIdOrThrowEx(id);
 
         existingAttribute.softDelete();
 
@@ -101,9 +104,17 @@ public class AttributeService {
         return new SuccessResponse();
     }
 
-    public BaseResponse deleteAttribute(Integer id) {
+    public BaseResponse deleteAttribute(int id) {
         attributeRepository.deleteById(id);
 
         return new SuccessResponse();
+    }
+
+    private Attribute findByIdOrThrowEx(int id) {
+        Specification<Attribute> spec = combineSpecs(List.of(
+                hasId(id),
+                isNonDeletedRecord()
+        ));
+        return this.attributeRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thuộc tính cần tìm với id: " + id));
     }
 }

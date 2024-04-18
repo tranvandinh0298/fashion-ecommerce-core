@@ -61,7 +61,7 @@ public class ImageService {
         }
     }
 
-    public BaseResponse getAllImages(Integer pageNum, Integer pageSize) {
+    public BaseResponse getAllImages(int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
 
         Specification<Image> spec = combineSpecs(List.of(
@@ -85,13 +85,10 @@ public class ImageService {
         return new SuccessResponse(pagedModel);
     }
 
-    public BaseResponse getImageById(Integer id) {
-        Specification<Image> spec = combineSpecs(List.of(
-                hasId(id), isNonDeletedRecord()
-        ));
-        Image image = this.imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: " + id));
+    public BaseResponse getImageById(int id) {
+        Image existingImage = findByIdOrThrowEx(id);
 
-        ImageDTO imageDTO = imageMapper.mapToImageDTO(image);
+        ImageDTO imageDTO = imageMapper.mapToImageDTO(existingImage);
 
         Link allImagesLink = linkTo(methodOn(ImageController.class).getAllImages(0,10)).withRel("allImages");
 
@@ -117,8 +114,8 @@ public class ImageService {
         }
     }
 
-    public BaseResponse softDeleteImage(Integer id) {
-        Image existingImage = this.imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
+    public BaseResponse softDeleteImage(int id) {
+        Image existingImage = findByIdOrThrowEx(id);
 
         existingImage.softDelete();
 
@@ -127,17 +124,25 @@ public class ImageService {
         return new SuccessResponse();
     }
 
-    public BaseResponse deleteImage(Integer id) {
+    public BaseResponse deleteImage(int id) {
         this.imageRepository.deleteById(id);
         return new SuccessResponse();
     }
 
-    protected ImageDTO saveImage(String fileName, String fileLocation) {
+    private ImageDTO saveImage(String fileName, String fileLocation) {
         Image image = new Image(fileName, fileLocation, 1);
 
         this.imageRepository.save(image);
 
         return imageMapper.mapToImageDTO(image);
+    }
+
+    private Image findByIdOrThrowEx(int id) {
+        Specification<Image> spec = combineSpecs(List.of(
+                hasId(id),
+                isNonDeletedRecord()
+        ));
+        return imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: " + id));
     }
 
 }
