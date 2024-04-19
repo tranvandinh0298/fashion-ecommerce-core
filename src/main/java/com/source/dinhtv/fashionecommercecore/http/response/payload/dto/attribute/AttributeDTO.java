@@ -1,6 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute;
 
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option.AttributeOptionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class AttributeDTO {
+public class AttributeDTO extends BaseDTO {
     public Integer attributeId;
     public String name;
-    public List<AttributeOptionDTO> optionDTOs;
 }

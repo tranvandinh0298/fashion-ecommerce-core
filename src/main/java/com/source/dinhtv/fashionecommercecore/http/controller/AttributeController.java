@@ -1,7 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeAndOptionsDTO;
 import com.source.dinhtv.fashionecommercecore.service.AttributeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +31,13 @@ public class AttributeController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> createAttribute(@Valid @RequestBody AttributeDTO attributeDTO) {
-        return new ResponseEntity<>(attributeService.createAttribute(attributeDTO), HttpStatus.CREATED);
+    public ResponseEntity<BaseResponse> createAttribute(@Valid @RequestBody AttributeAndOptionsDTO attributeAndOptionsDTO) {
+        return new ResponseEntity<>(attributeService.createAttribute(attributeAndOptionsDTO), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{attributeId}")
-    public ResponseEntity<BaseResponse> updateAttribute(@PathVariable int attributeId,@Valid @RequestBody AttributeDTO attributeDTO) {
-        return new ResponseEntity<>(attributeService.updateAttribute(attributeId, attributeDTO), HttpStatus.ACCEPTED);
+    public ResponseEntity<BaseResponse> updateAttribute(@PathVariable int attributeId,@Valid @RequestBody AttributeAndOptionsDTO attributeAndOptionsDTO) {
+        return new ResponseEntity<>(attributeService.updateAttribute(attributeId, attributeAndOptionsDTO), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/soft-delete/{attributeId}")

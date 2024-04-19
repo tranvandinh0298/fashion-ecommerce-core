@@ -4,8 +4,8 @@ import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundExceptio
 import com.source.dinhtv.fashionecommercecore.http.controller.AttributeController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.AttributeMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeAndOptionsDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.attribute.AttributeMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeRepository;
@@ -48,13 +48,13 @@ public class AttributeService {
             throw new ResourceNotFoundException("Không tìm thấy thuộc tính nào");
         }
 
-        List<EntityModel<AttributeDTO>> attributeEntities = attributesPage.stream().map(
+        List<EntityModel<AttributeAndOptionsDTO>> attributeEntities = attributesPage.stream().map(
                 attribute -> EntityModel.of(
                         attributeMapper.mapToAttributeDTO(attribute),
                         linkTo(methodOn(AttributeController.class).getAttributeById(attribute.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<AttributeDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, attributesPage.getTotalElements(), attributesPage.getTotalPages());
+        PagedModel<EntityModel<AttributeAndOptionsDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, attributesPage.getTotalElements(), attributesPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
 
@@ -63,27 +63,27 @@ public class AttributeService {
     public BaseResponse getAttributeById(int id) {
         Attribute attribute = findByIdOrThrowEx(id);
 
-        AttributeDTO attributeDTO = attributeMapper.mapToAttributeDTO(attribute);
+        AttributeAndOptionsDTO attributeAndOptionsDTO = attributeMapper.mapToAttributeDTO(attribute);
 
         Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
 
-        EntityModel<AttributeDTO> attributeEntity = EntityModel.of(attributeDTO, allAttributesLink);
+        EntityModel<AttributeAndOptionsDTO> attributeEntity = EntityModel.of(attributeAndOptionsDTO, allAttributesLink);
 
         return new SuccessResponse(attributeEntity);
     }
 
-    public BaseResponse createAttribute(AttributeDTO attributeDTO) {
-        Attribute attribute = attributeMapper.mapToAttribute(attributeDTO);
+    public BaseResponse createAttribute(AttributeAndOptionsDTO attributeAndOptionsDTO) {
+        Attribute attribute = attributeMapper.mapToAttribute(attributeAndOptionsDTO);
 
         attributeRepository.save(attribute);
 
         return new SuccessResponse(attributeMapper.mapToAttributeDTO(attribute));
     }
 
-    public BaseResponse updateAttribute(int id, AttributeDTO attributeDTO) {
+    public BaseResponse updateAttribute(int id, AttributeAndOptionsDTO attributeAndOptionsDTO) {
         Attribute existedAttribute = findByIdOrThrowEx(id);
 
-        attributeMapper.updateFromAttributeDTO(attributeDTO, existedAttribute);
+        attributeMapper.updateFromAttributeDTO(attributeAndOptionsDTO, existedAttribute);
 
         attributeRepository.save(existedAttribute);
 

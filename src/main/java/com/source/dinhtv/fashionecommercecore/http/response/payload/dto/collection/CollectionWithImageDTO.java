@@ -1,6 +1,5 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection;
 
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +12,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CollectionDTO extends BaseDTO {
-    public Integer collectionId;
-    public String name;
-    public String slug;
-    public String description;
-    public Integer status;
+public class CollectionWithImageDTO extends CollectionDTO{
+    public ImageDTO imageDTO;
 }

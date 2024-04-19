@@ -1,7 +1,7 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class SkuDTO extends BaseDTO {
-    public Integer skuId;
-    public String code;
-    public Integer quantity;
-    public Double price;
+public class CollectionWithProductsDTO extends BaseDTO {
+    public List<ProductDTO> productDTOs;
 }

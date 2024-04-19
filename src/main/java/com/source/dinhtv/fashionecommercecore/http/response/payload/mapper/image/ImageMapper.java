@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
 import com.source.dinhtv.fashionecommercecore.model.Image;

@@ -7,7 +7,7 @@ import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.ImageMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image.ImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
 import org.slf4j.Logger;

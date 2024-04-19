@@ -5,7 +5,7 @@ import com.source.dinhtv.fashionecommercecore.http.controller.ProductController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.ProductMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.product.ProductMapper;
 import com.source.dinhtv.fashionecommercecore.model.Product;
 import com.source.dinhtv.fashionecommercecore.model.Sku;
 import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;

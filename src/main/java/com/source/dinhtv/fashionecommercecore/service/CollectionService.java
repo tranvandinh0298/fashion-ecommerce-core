@@ -5,7 +5,7 @@ import com.source.dinhtv.fashionecommercecore.http.controller.CollectionControll
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection.CollectionDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.CollectionMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.collection.CollectionMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,9 +5,9 @@ import com.source.dinhtv.fashionecommercecore.http.controller.AttributeControlle
 import com.source.dinhtv.fashionecommercecore.http.controller.AttributeOptionController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option.AttributeOptionDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.AttributeMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.AttributeOptionMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.attribute.AttributeMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.option.AttributeOptionMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
 import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
@@ -56,13 +56,13 @@ public class AttributeOptionService {
             throw new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn nào");
         }
 
-        List<EntityModel<AttributeOptionDTO>> optionEntities = optionsPage.stream().map(
+        List<EntityModel<OptionDTO>> optionEntities = optionsPage.stream().map(
                 option -> EntityModel.of(
                         optionMapper.mapToAttributeOptionDTO(option),
                         linkTo(methodOn(AttributeOptionController.class).getAttributeOptionById(attributeId, option.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<AttributeOptionDTO>> pagedModel = getPagedModel(optionEntities,pageNum,pageSize, optionsPage.getTotalElements(), optionsPage.getTotalPages());
+        PagedModel<EntityModel<OptionDTO>> pagedModel = getPagedModel(optionEntities,pageNum,pageSize, optionsPage.getTotalElements(), optionsPage.getTotalPages());
 
         Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
 
@@ -74,18 +74,18 @@ public class AttributeOptionService {
     public BaseResponse getAttributeOptionById(int attributeId, int optionId) {
         AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
         
-        AttributeOptionDTO attributeOptionDTO = optionMapper.mapToAttributeOptionDTO(option);
+        OptionDTO optionDTO = optionMapper.mapToAttributeOptionDTO(option);
 
         Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
         Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
         Link allAttributeOptionsLink = linkTo(methodOn(AttributeOptionController.class).getAllAttributeOptions(attributeId, 0, 10)).withRel("allAttributeOptionsLink");
 
-        EntityModel<AttributeOptionDTO> attributeEntity = EntityModel.of(attributeOptionDTO, allAttributesLink, attributeLink, allAttributeOptionsLink);
+        EntityModel<OptionDTO> attributeEntity = EntityModel.of(optionDTO, allAttributesLink, attributeLink, allAttributeOptionsLink);
 
         return new SuccessResponse(attributeEntity);
     }
 
-    public BaseResponse createAttributeOption(int attributeId, AttributeOptionDTO optionDTO) {
+    public BaseResponse createAttributeOption(int attributeId, OptionDTO optionDTO) {
         AttributeOption option = optionMapper.mapToAttributeOption(optionDTO);
 
         Attribute attribute = this.attributeRepository.findOne(combineSpecs(List.of(
@@ -100,7 +100,7 @@ public class AttributeOptionService {
         return new SuccessResponse(optionMapper.mapToAttributeOptionDTO(option));
     }
 
-    public BaseResponse updateAttributeOption(int attributeId, int optionId, AttributeOptionDTO optionDTO) {
+    public BaseResponse updateAttributeOption(int attributeId, int optionId, OptionDTO optionDTO) {
         AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
 
         optionMapper.updateFromAttributeOptionDTO(optionDTO, option);

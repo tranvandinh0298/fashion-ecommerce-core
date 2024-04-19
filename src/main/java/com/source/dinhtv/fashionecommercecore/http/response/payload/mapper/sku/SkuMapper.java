@@ -1,6 +1,7 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.sku;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku.SkuDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.option.AttributeOptionMapper;
 import com.source.dinhtv.fashionecommercecore.model.Sku;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

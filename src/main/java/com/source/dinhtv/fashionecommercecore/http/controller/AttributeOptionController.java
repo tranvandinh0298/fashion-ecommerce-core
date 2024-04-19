@@ -1,7 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option.AttributeOptionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
 import com.source.dinhtv.fashionecommercecore.service.AttributeOptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +31,12 @@ public class AttributeOptionController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> createAttributeOption(@PathVariable int attributeId, @Valid @RequestBody AttributeOptionDTO optionDTO) {
+    public ResponseEntity<BaseResponse> createAttributeOption(@PathVariable int attributeId, @Valid @RequestBody OptionDTO optionDTO) {
         return new ResponseEntity<>(attributeOptionService.createAttributeOption(attributeId, optionDTO), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{optionId}")
-    public ResponseEntity<BaseResponse> updateAttributeOption(@PathVariable int attributeId, @PathVariable int optionId, @Valid @RequestBody AttributeOptionDTO optionDTO) {
+    public ResponseEntity<BaseResponse> updateAttributeOption(@PathVariable int attributeId, @PathVariable int optionId, @Valid @RequestBody OptionDTO optionDTO) {
         return new ResponseEntity<>(attributeOptionService.updateAttributeOption(attributeId, optionId, optionDTO), HttpStatus.ACCEPTED);
     }
 

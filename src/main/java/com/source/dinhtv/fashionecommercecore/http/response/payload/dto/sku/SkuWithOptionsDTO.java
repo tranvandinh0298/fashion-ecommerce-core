@@ -15,9 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class SkuDTO extends BaseDTO {
-    public Integer skuId;
-    public String code;
-    public Integer quantity;
-    public Double price;
+public class SkuWithOptionsDTO extends SkuDTO {
+    public List<OptionDTO> optionDTOs;
 }

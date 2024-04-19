@@ -1,6 +1,7 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.collection;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection.CollectionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image.ImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
