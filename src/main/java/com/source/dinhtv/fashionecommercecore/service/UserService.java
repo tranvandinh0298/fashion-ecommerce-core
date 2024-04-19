@@ -4,22 +4,14 @@ import com.source.dinhtv.fashionecommercecore.exception.ResourceAlreadyExists;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.UserDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.user.UserDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.UserMapper;
-import com.source.dinhtv.fashionecommercecore.model.Image;
 import com.source.dinhtv.fashionecommercecore.model.User;
 import com.source.dinhtv.fashionecommercecore.repository.UserRepository;
-import com.source.dinhtv.fashionecommercecore.repository.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
-import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.combineSpecs;
-import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.isNonDeletedRecord;
-import static com.source.dinhtv.fashionecommercecore.repository.specification.UserSpecification.hasEmail;
 
 @Service
 public class UserService {

@@ -1,7 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

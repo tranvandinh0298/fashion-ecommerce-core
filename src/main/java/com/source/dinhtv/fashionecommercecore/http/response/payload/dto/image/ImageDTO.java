@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image;
 
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class ImageDTO {
-    public Integer id;
+    public Integer imageId;
     public String caption;
     public String address;
 }

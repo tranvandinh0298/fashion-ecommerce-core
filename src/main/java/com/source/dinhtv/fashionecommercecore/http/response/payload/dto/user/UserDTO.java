@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.user;
 
 
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Component
 public class UserDTO {
-    public Integer id;
+    public Integer userId;
     public String name;
     public String email;
     public Date emailVerifiedAt;

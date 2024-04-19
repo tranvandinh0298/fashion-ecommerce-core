@@ -1,9 +1,8 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product;
 
-import com.source.dinhtv.fashionecommercecore.model.Sku;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku.SkuDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class ProductDTO {
-    public Integer id;
+    public Integer productId;
 
     public String name;
 
@@ -30,7 +29,7 @@ public class ProductDTO {
 
     public Integer status;
 
-    public CategoryDTO categoryDTO;
+    public List<CategoryDTO> categoryDTOs;
 
     public List<SkuDTO> skuDTOs;
 

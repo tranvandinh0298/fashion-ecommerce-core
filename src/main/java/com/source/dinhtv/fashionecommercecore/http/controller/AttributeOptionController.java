@@ -1,9 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeOptionDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option.AttributeOptionDTO;
 import com.source.dinhtv.fashionecommercecore.service.AttributeOptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

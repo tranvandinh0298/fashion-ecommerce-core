@@ -46,10 +46,17 @@ public class Product extends SoftDeleting {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Sku> skus;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "image_product",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<Image> images;
+
+    @ManyToMany
+    @JoinTable(name = "category_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 }

@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class AttributeOptionDTO {
-    public Integer id;
+    public Integer optionId;
     public String value;
 }

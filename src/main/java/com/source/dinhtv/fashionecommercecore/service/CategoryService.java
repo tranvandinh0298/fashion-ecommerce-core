@@ -2,10 +2,9 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController;
-import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.CategoryMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
@@ -20,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.source.dinhtv.fashionecommercecore.repository.CategoryRepository.isRegularCategory;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.CATEGORY_TYPE;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.verifyPageNumAndSize;
 
@@ -38,12 +39,13 @@ public class CategoryService {
         verifyPageNumAndSize(pageNum,pageSize);
 
         Specification<Category> specs = combineSpecs(List.of(
+                isRegularCategory(),
                 isNonDeletedRecord()
         ));
         Page<Category> categoriesPage = categoryRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
 
         if (categoriesPage.isEmpty()) {
-            throw new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập nào");
+            throw new ResourceNotFoundException("Không tìm thấy thể loại nào");
         }
 
         List<EntityModel<CategoryDTO>> CategoryEntities = categoriesPage.stream().map(
@@ -72,6 +74,7 @@ public class CategoryService {
 
     public BaseResponse createCategory(CategoryDTO categoryDTO) {
         Category category = categoryMapper.mapToCategory(categoryDTO);
+        category.setType(CATEGORY_TYPE);
 
         categoryRepository.save(category);
 
@@ -107,8 +110,9 @@ public class CategoryService {
     private Category findByIdOrThrowEx(int id) {
         Specification<Category> spec = combineSpecs(List.of(
                 hasId(id),
+                isRegularCategory(),
                 isNonDeletedRecord()
         ));
-        return this.categoryRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại/ bộ sưu tập cần tìm với id: " + id));
+        return this.categoryRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại cần tìm với id: " + id));
     }
 }

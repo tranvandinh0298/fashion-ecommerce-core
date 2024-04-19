@@ -2,13 +2,11 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.AttributeController;
-import com.source.dinhtv.fashionecommercecore.http.controller.ImageController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.AttributeDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.AttributeMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
-import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository.withAttributeId;
-import static com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository.withNonDeletedAttribute;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.isNonDeletedRecord;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;

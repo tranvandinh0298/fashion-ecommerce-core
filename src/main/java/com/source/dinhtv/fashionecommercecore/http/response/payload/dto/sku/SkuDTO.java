@@ -1,10 +1,6 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku;
 
-import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
-import com.source.dinhtv.fashionecommercecore.model.Product;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.option.AttributeOptionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class SkuDTO {
-    public Integer id;
+    public Integer skuId;
     public String code;
     public Integer quantity;
     public Double price;

@@ -1,15 +1,14 @@
 package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
-import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController;
 import com.source.dinhtv.fashionecommercecore.http.controller.ProductController;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.ProductDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.ProductMapper;
-import com.source.dinhtv.fashionecommercecore.model.Attribute;
 import com.source.dinhtv.fashionecommercecore.model.Product;
 import com.source.dinhtv.fashionecommercecore.model.Sku;
+import com.source.dinhtv.fashionecommercecore.repository.ImageRepository;
 import com.source.dinhtv.fashionecommercecore.repository.ProductRepository;
 import com.source.dinhtv.fashionecommercecore.repository.SkuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ImageRepository imageRepository;
     @Autowired
     private SkuRepository skuRepository;
     @Autowired

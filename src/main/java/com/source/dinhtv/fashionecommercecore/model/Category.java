@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 //@Getter
 //@Setter
@@ -24,25 +25,35 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "categories")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "category_type", discriminatorType = DiscriminatorType.STRING)
 public class Category extends SoftDeleting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotBlank
     @Column(name="name")
     private String name;
+
     @NotBlank
     @Column(name="slug")
     private String slug;
+
     @NotBlank
     @Column(name="description")
     private String description;
+
     @NotNull
     @Column(name="status")
     private Integer status;
+
+    @NotNull
+    @Column(name="type")
+    private Integer type;
+
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
+
+    @ManyToMany(mappedBy = "categories")
+    private List<Product> products;
 }
