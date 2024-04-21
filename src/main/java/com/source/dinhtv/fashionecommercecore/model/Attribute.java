@@ -3,15 +3,12 @@ package com.source.dinhtv.fashionecommercecore.model;
 import com.source.dinhtv.fashionecommercecore.model.datetime.SoftDeleting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -31,5 +28,5 @@ public class Attribute extends SoftDeleting {
     private String name;
 
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.REMOVE)
-    private List<AttributeOption> options;
+    private List<Option> options;
 }

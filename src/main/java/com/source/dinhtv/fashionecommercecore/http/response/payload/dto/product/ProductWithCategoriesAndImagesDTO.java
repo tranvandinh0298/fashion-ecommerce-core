@@ -1,9 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product;
 
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku.SkuDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class ProductWithCategoryDTO extends ProductDTO {
-    public List<CategoryDTO> categoryDTOs;
+public class ProductWithCategoriesAndImagesDTO extends ProductWithCategoriesDTO {
+    public List<ImageDTO> imageDTOs;
 }

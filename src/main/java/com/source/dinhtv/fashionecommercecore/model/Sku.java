@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -44,5 +43,5 @@ public class Sku extends SoftDeleting {
             joinColumns = @JoinColumn(name = "sku_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_option_id")
     )
-    private List<AttributeOption> options;
+    private List<Option> options;
 }

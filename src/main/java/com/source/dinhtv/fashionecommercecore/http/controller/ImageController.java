@@ -25,6 +25,11 @@ public class ImageController {
         return new ResponseEntity<>(this.imageService.getAllImages(page, limit), HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<BaseResponse> getAllImagesWithoutPagination() {
+        return new ResponseEntity<>(this.imageService.getAllImagesWithoutPagination(), HttpStatus.OK);
+    }
+
     @PostMapping()
     public ResponseEntity<BaseResponse> uploadFile(@RequestParam("file") MultipartFile file) {
         return new ResponseEntity<>(this.imageService.uploadSingleFile(file), HttpStatus.OK);

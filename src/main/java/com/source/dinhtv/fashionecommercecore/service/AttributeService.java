@@ -5,6 +5,7 @@ import com.source.dinhtv.fashionecommercecore.http.controller.AttributeControlle
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeAndOptionsDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.attribute.AttributeDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.attribute.AttributeMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
@@ -48,13 +49,13 @@ public class AttributeService {
             throw new ResourceNotFoundException("Không tìm thấy thuộc tính nào");
         }
 
-        List<EntityModel<AttributeAndOptionsDTO>> attributeEntities = attributesPage.stream().map(
+        List<EntityModel<AttributeDTO>> attributeEntities = attributesPage.stream().map(
                 attribute -> EntityModel.of(
                         attributeMapper.mapToAttributeDTO(attribute),
                         linkTo(methodOn(AttributeController.class).getAttributeById(attribute.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<AttributeAndOptionsDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, attributesPage.getTotalElements(), attributesPage.getTotalPages());
+        PagedModel<EntityModel<AttributeDTO>> pagedModel = getPagedModel(attributeEntities,pageNum,pageSize, attributesPage.getTotalElements(), attributesPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
 
@@ -63,11 +64,11 @@ public class AttributeService {
     public BaseResponse getAttributeById(int id) {
         Attribute attribute = findByIdOrThrowEx(id);
 
-        AttributeAndOptionsDTO attributeAndOptionsDTO = attributeMapper.mapToAttributeDTO(attribute);
+        AttributeDTO attributeDTO = attributeMapper.mapToAttributeDTO(attribute);
 
         Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
 
-        EntityModel<AttributeAndOptionsDTO> attributeEntity = EntityModel.of(attributeAndOptionsDTO, allAttributesLink);
+        EntityModel<AttributeDTO> attributeEntity = EntityModel.of(attributeDTO, allAttributesLink);
 
         return new SuccessResponse(attributeEntity);
     }

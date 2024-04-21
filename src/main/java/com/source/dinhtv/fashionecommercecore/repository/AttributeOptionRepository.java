@@ -1,27 +1,19 @@
 package com.source.dinhtv.fashionecommercecore.repository;
 
-import com.source.dinhtv.fashionecommercecore.model.Attribute;
-import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
+import com.source.dinhtv.fashionecommercecore.model.Option;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
-import java.util.List;
-
 @Repository
-public interface AttributeOptionRepository extends JpaRepository<AttributeOption, Integer>, JpaSpecificationExecutor<AttributeOption> {
+public interface AttributeOptionRepository extends JpaRepository<Option, Integer>, JpaSpecificationExecutor<Option> {
 
-    public static Specification<AttributeOption> withAttributeId(Integer attributeId) {
+    public static Specification<Option> withAttributeId(Integer attributeId) {
         return (root, query, cb) -> cb.equal(root.get("attribute").get("id"), attributeId);
     }
 
-    public static Specification<AttributeOption> withNonDeletedAttribute() {
+    public static Specification<Option> withNonDeletedAttribute() {
         return (root, query, cb) -> cb.isNull(root.get("attribute").get("deletedAt"));
     }
 }

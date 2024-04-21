@@ -7,9 +7,9 @@ import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.attribute.AttributeMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.option.AttributeOptionMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.option.OptionMapper;
 import com.source.dinhtv.fashionecommercecore.model.Attribute;
-import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
+import com.source.dinhtv.fashionecommercecore.model.Option;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeOptionRepository;
 import com.source.dinhtv.fashionecommercecore.repository.AttributeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +40,17 @@ public class AttributeOptionService {
     @Autowired
     private AttributeOptionRepository optionRepository;
     @Autowired
-    private AttributeOptionMapper optionMapper;
+    private OptionMapper optionMapper;
 
     public BaseResponse getAllAttributeOptions(int attributeId, int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
 
-        Specification<AttributeOption> specs = combineSpecs(List.of(
+        Specification<Option> specs = combineSpecs(List.of(
                 withAttributeId(attributeId),
                 withNonDeletedAttribute(),
                 isNonDeletedRecord()
         ));
-        Page<AttributeOption> optionsPage = optionRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
+        Page<Option> optionsPage = optionRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
 
         if (optionsPage.isEmpty()) {
             throw new ResourceNotFoundException("Không tìm thấy giá trị tùy chọn nào");
@@ -58,7 +58,7 @@ public class AttributeOptionService {
 
         List<EntityModel<OptionDTO>> optionEntities = optionsPage.stream().map(
                 option -> EntityModel.of(
-                        optionMapper.mapToAttributeOptionDTO(option),
+                        optionMapper.mapOptionDTO(option),
                         linkTo(methodOn(AttributeOptionController.class).getAttributeOptionById(attributeId, option.getId())).withSelfRel())
         ).toList();
 
@@ -72,9 +72,9 @@ public class AttributeOptionService {
     }
 
     public BaseResponse getAttributeOptionById(int attributeId, int optionId) {
-        AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
+        Option option = findByIdOrThrowEx(attributeId, optionId);
         
-        OptionDTO optionDTO = optionMapper.mapToAttributeOptionDTO(option);
+        OptionDTO optionDTO = optionMapper.mapOptionDTO(option);
 
         Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
         Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
@@ -86,7 +86,7 @@ public class AttributeOptionService {
     }
 
     public BaseResponse createAttributeOption(int attributeId, OptionDTO optionDTO) {
-        AttributeOption option = optionMapper.mapToAttributeOption(optionDTO);
+        Option option = optionMapper.mapToOption(optionDTO);
 
         Attribute attribute = this.attributeRepository.findOne(combineSpecs(List.of(
                 hasId(attributeId),
@@ -97,21 +97,21 @@ public class AttributeOptionService {
 
         optionRepository.save(option);
 
-        return new SuccessResponse(optionMapper.mapToAttributeOptionDTO(option));
+        return new SuccessResponse(optionMapper.mapOptionDTO(option));
     }
 
     public BaseResponse updateAttributeOption(int attributeId, int optionId, OptionDTO optionDTO) {
-        AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
+        Option option = findByIdOrThrowEx(attributeId, optionId);
 
-        optionMapper.updateFromAttributeOptionDTO(optionDTO, option);
+        optionMapper.updateFromOptionDTO(optionDTO, option);
 
         optionRepository.save(option);
 
-        return new SuccessResponse(optionMapper.mapToAttributeOptionDTO(option));
+        return new SuccessResponse(optionMapper.mapOptionDTO(option));
     }
 
     public BaseResponse softDeleteAttributeOption(int attributeId, int optionId) {
-        AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
+        Option option = findByIdOrThrowEx(attributeId, optionId);
 
         option.softDelete();
 
@@ -121,15 +121,15 @@ public class AttributeOptionService {
     }
 
     public BaseResponse deleteAttributeOption(int attributeId, int optionId) {
-        AttributeOption option = findByIdOrThrowEx(attributeId, optionId);
+        Option option = findByIdOrThrowEx(attributeId, optionId);
 
         optionRepository.deleteById(optionId);
 
         return new SuccessResponse();
     }
 
-    private AttributeOption findByIdOrThrowEx(int attributeId, int optionId) {
-        Specification<AttributeOption> spec = combineSpecs(List.of(
+    private Option findByIdOrThrowEx(int attributeId, int optionId) {
+        Specification<Option> spec = combineSpecs(List.of(
                 withAttributeId(attributeId),
                 withNonDeletedAttribute(),
                 hasId(optionId),

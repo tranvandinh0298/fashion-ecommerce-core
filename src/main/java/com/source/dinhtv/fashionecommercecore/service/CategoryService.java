@@ -84,7 +84,7 @@ public class CategoryService {
     public BaseResponse updateCategory(int id, CategoryDTO categoryDTO) {
         Category existedCategory = findByIdOrThrowEx(id);
 
-        categoryMapper.updateCategoryFromCategoryDTO(categoryDTO, existedCategory);
+        categoryMapper.updateFromCategoryDTO(categoryDTO, existedCategory);
 
         categoryRepository.save(existedCategory);
 

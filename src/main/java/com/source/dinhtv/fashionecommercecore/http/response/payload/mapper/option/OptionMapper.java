@@ -2,19 +2,20 @@ package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.opti
 
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.option.OptionDTO;
-import com.source.dinhtv.fashionecommercecore.model.AttributeOption;
+import com.source.dinhtv.fashionecommercecore.model.Attribute;
+import com.source.dinhtv.fashionecommercecore.model.Option;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
-public interface AttributeOptionMapper {
+@Mapper(componentModel = "spring", uses = {Attribute.class})
+public interface OptionMapper {
     @Mapping(source = "id", target = "optionId")
-    OptionDTO mapToAttributeOptionDTO(AttributeOption attributeOption);
+    OptionDTO mapOptionDTO(Option option);
 
     @Mapping(source = "optionId", target = "id")
-    AttributeOption mapToAttributeOption(OptionDTO optionDTO);
+    Option mapToOption(OptionDTO optionDTO);
 
     @Mapping(target = "id", ignore = true)
-    AttributeOption updateFromAttributeOptionDTO(OptionDTO optionDTO, @MappingTarget AttributeOption attributeOption);
+    Option updateFromOptionDTO(OptionDTO optionDTO, @MappingTarget Option option);
 }

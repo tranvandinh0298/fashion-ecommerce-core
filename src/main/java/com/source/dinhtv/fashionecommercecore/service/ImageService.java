@@ -75,6 +75,21 @@ public class ImageService {
         return new SuccessResponse(pagedModel);
     }
 
+    public BaseResponse getAllImagesWithoutPagination() {
+        Specification<Image> spec = combineSpecs(List.of(
+                isNonDeletedRecord()
+        ));
+        List<Image> images = this.imageRepository.findAll(spec);
+        if (images.isEmpty()) {
+            throw new ResourceNotFoundException("Không tìm thấy ảnh nào");
+        }
+        List<ImageDTO> imageDTOs = images.stream().map(
+                image -> imageMapper.mapToImageDTO(image)
+        ).toList();
+
+        return new SuccessResponse(imageDTOs);
+    }
+
     public BaseResponse getImageById(int id) {
         Image existingImage = findByIdOrThrowEx(id);
 
@@ -134,5 +149,6 @@ public class ImageService {
         ));
         return imageRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy image cần tìm với id: " + id));
     }
+
 
 }
