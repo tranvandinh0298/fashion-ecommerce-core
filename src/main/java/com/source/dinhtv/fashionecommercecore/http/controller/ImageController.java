@@ -2,7 +2,10 @@ package com.source.dinhtv.fashionecommercecore.http.controller;
 
 
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
 import com.source.dinhtv.fashionecommercecore.service.ImageService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +34,8 @@ public class ImageController {
     }
 
     @PostMapping()
-    public ResponseEntity<BaseResponse> uploadImage(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(this.imageService.uploadSingleFile(file), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> createImage(@Valid @RequestBody ImageDTO imageDTO) {
+        return new ResponseEntity<>(this.imageService.createImage(imageDTO), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

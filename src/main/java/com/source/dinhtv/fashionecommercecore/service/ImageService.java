@@ -30,6 +30,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.RECORD_STATUS_ACTIVE;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -40,16 +41,6 @@ public class ImageService {
     private ImageRepository imageRepository;
     @Autowired
     private ImageMapper imageMapper;
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private final Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
-
-    public ImageService() {
-        try {
-            Files.createDirectories(this.uploadDir);
-        } catch (Exception ex) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
-        }
-    }
 
     public BaseResponse getAllImages(int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
@@ -103,20 +94,12 @@ public class ImageService {
 
     }
 
-    public BaseResponse uploadSingleFile(MultipartFile file) {
-        // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-            // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.uploadDir.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+    public BaseResponse createImage(ImageDTO imageDTO) {
+        Image image = imageMapper.mapToImage(imageDTO);
+        image.setStatus(RECORD_STATUS_ACTIVE);
+        imageRepository.save(image);
 
-            String fileLocation = targetLocation.toString();
-
-            return new SuccessResponse(this.saveImage(fileName, fileLocation));
-        } catch (Exception ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-        }
+        return new SuccessResponse(imageMapper.mapToImageDTO(image));
     }
 
     public BaseResponse softDeleteImage(int id) {
@@ -132,14 +115,6 @@ public class ImageService {
     public BaseResponse deleteImage(int id) {
         this.imageRepository.deleteById(id);
         return new SuccessResponse();
-    }
-
-    private ImageDTO saveImage(String fileName, String fileLocation) {
-        Image image = new Image(fileName, fileLocation, 1);
-
-        this.imageRepository.save(image);
-
-        return imageMapper.mapToImageDTO(image);
     }
 
     private Image findByIdOrThrowEx(int id) {
