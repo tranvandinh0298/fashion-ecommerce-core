@@ -31,7 +31,7 @@ public class ImageController {
     }
 
     @PostMapping()
-    public ResponseEntity<BaseResponse> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<BaseResponse> uploadImage(@RequestParam("file") MultipartFile file) {
         return new ResponseEntity<>(this.imageService.uploadSingleFile(file), HttpStatus.OK);
     }
 
