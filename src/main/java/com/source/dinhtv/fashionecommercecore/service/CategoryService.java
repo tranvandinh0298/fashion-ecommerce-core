@@ -5,7 +5,9 @@ import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryWithImageDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryWithImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private CategoryWithImageMapper categoryWithImageMapper;
 
     public BaseResponse getAllCategories(int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
@@ -48,13 +52,13 @@ public class CategoryService {
             throw new ResourceNotFoundException("Không tìm thấy thể loại nào");
         }
 
-        List<EntityModel<CategoryDTO>> CategoryEntities = categoriesPage.stream().map(
+        List<EntityModel<CategoryWithImageDTO>> CategoryEntities = categoriesPage.stream().map(
                 category -> EntityModel.of(
-                        categoryMapper.mapToCategoryDTO(category),
+                        categoryWithImageMapper.mapToCategoryDTO(category),
                         linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<CategoryDTO>> pagedModel = getPagedModel(CategoryEntities,pageNum,pageSize, categoriesPage.getTotalElements(), categoriesPage.getTotalPages());
+        PagedModel<EntityModel<CategoryWithImageDTO>> pagedModel = getPagedModel(CategoryEntities,pageNum,pageSize, categoriesPage.getTotalElements(), categoriesPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
 

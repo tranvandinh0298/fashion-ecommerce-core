@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {OptionMapper.class})
+@Mapper(componentModel = "spring")
 public interface AttributeMapper {
     @Mapping(source = "id", target = "attributeId")
     AttributeDTO mapToAttributeDTO(Attribute attribute);

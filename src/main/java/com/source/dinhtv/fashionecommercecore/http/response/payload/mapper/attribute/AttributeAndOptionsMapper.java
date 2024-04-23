@@ -8,12 +8,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-public interface AttributeAndOptionsMapper extends AttributeMapper{
+@Mapper(componentModel = "spring", uses = {OptionMapper.class})
+public interface AttributeAndOptionsMapper{
+    @Mapping(source = "id", target = "attributeId")
     @Mapping(source = "options", target = "optionDTOs")
     AttributeAndOptionsDTO mapToAttributeDTO(Attribute attribute);
 
+    @Mapping(source = "attributeId", target = "id")
     @Mapping(source = "optionDTOs", target = "options")
     Attribute mapToAttribute(AttributeAndOptionsDTO attributeAndOptionsDTO);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "attributeAndOptionsDTO.optionDTOs", target = "attribute.options")
     Attribute updateFromAttributeDTO(AttributeAndOptionsDTO attributeAndOptionsDTO, @MappingTarget Attribute attribute);
 }

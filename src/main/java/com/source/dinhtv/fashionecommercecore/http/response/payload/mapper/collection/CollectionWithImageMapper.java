@@ -4,11 +4,13 @@ import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection.CollectionDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.collection.CollectionWithImageDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image.ImageMapper;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.product.ProductMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+@Mapper(componentModel = "spring", uses = {ProductMapper.class, ImageMapper.class})
 public interface CollectionWithImageMapper extends CollectionMapper{
     @Mapping(source = "image", target = "imageDTO")
     CollectionWithImageDTO mapToCollectionDTO(Category collection);

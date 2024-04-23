@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+@Mapper(componentModel = "spring", uses = {ProductMapper.class, ImageMapper.class})
 public interface CollectionWithProductsMapper extends CollectionMapper{
     @Mapping(source = "products", target = "productDTOs")
     CollectionWithProductsDTO mapToCategoryDTO(Category collection);
