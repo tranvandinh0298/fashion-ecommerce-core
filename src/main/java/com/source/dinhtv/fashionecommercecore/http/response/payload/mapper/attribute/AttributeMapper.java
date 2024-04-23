@@ -10,6 +10,9 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface AttributeMapper {
+    /**
+     * Only Attribute
+     * */
     @Mapping(source = "id", target = "attributeId")
     AttributeDTO mapToAttributeDTO(Attribute attribute);
 
@@ -18,4 +21,19 @@ public interface AttributeMapper {
 
     @Mapping(target = "id", ignore = true)
     Attribute updateFromAttributeDTO(AttributeDTO attributeDTO, @MappingTarget Attribute attribute);
+
+    /**
+     * Attribute & Options
+     * */
+    @Mapping(source = "id", target = "attributeId")
+    @Mapping(source = "options", target = "optionDTOs")
+    AttributeAndOptionsDTO mapToAttributeAndOptionsDTO(Attribute attribute);
+
+    @Mapping(source = "attributeId", target = "id")
+    @Mapping(source = "optionDTOs", target = "options")
+    Attribute mapToAttribute(AttributeAndOptionsDTO attributeAndOptionsDTO);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "attributeAndOptionsDTO.optionDTOs", target = "attribute.options")
+    Attribute updateFromAttributeDTO(AttributeAndOptionsDTO attributeAndOptionsDTO, @MappingTarget Attribute attribute);
 }

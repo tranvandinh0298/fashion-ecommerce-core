@@ -7,7 +7,6 @@ import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryWithImageDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryWithImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,6 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private CategoryMapper categoryMapper;
-    @Autowired
-    private CategoryWithImageMapper categoryWithImageMapper;
 
     public BaseResponse getAllCategories(int pageNum, int pageSize) {
         verifyPageNumAndSize(pageNum,pageSize);
@@ -54,7 +51,7 @@ public class CategoryService {
 
         List<EntityModel<CategoryWithImageDTO>> CategoryEntities = categoriesPage.stream().map(
                 category -> EntityModel.of(
-                        categoryWithImageMapper.mapToCategoryDTO(category),
+                        categoryMapper.mapToCategoryAndImageDTO(category),
                         linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel())
         ).toList();
 
