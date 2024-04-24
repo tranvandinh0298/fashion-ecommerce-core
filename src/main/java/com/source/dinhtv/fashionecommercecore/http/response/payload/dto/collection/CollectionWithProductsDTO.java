@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CollectionWithProductsDTO extends BaseDTO {
+public class CollectionWithProductsDTO extends CollectionDTO {
     public List<ProductDTO> productDTOs;
 }

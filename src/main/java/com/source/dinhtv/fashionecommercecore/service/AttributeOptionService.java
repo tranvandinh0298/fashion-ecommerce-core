@@ -58,7 +58,7 @@ public class AttributeOptionService {
 
         List<EntityModel<OptionDTO>> optionEntities = optionsPage.stream().map(
                 option -> EntityModel.of(
-                        optionMapper.mapOptionDTO(option),
+                        optionMapper.mapToOptionDTO(option),
                         linkTo(methodOn(AttributeOptionController.class).getAttributeOptionById(attributeId, option.getId())).withSelfRel())
         ).toList();
 
@@ -74,7 +74,7 @@ public class AttributeOptionService {
     public BaseResponse getAttributeOptionById(int attributeId, int optionId) {
         Option option = findByIdOrThrowEx(attributeId, optionId);
         
-        OptionDTO optionDTO = optionMapper.mapOptionDTO(option);
+        OptionDTO optionDTO = optionMapper.mapToOptionDTO(option);
 
         Link allAttributesLink = linkTo(methodOn(AttributeController.class).getAllAttributes(0,10)).withRel("allAttributes");
         Link attributeLink = linkTo(methodOn(AttributeController.class).getAttributeById(attributeId)).withRel("attribute");
@@ -97,7 +97,7 @@ public class AttributeOptionService {
 
         optionRepository.save(option);
 
-        return new SuccessResponse(optionMapper.mapOptionDTO(option));
+        return new SuccessResponse(optionMapper.mapToOptionDTO(option));
     }
 
     public BaseResponse updateAttributeOption(int attributeId, int optionId, OptionDTO optionDTO) {
@@ -107,7 +107,7 @@ public class AttributeOptionService {
 
         optionRepository.save(option);
 
-        return new SuccessResponse(optionMapper.mapOptionDTO(option));
+        return new SuccessResponse(optionMapper.mapToOptionDTO(option));
     }
 
     public BaseResponse softDeleteAttributeOption(int attributeId, int optionId) {
