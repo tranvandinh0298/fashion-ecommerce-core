@@ -3,6 +3,7 @@ package com.source.dinhtv.fashionecommercecore.service;
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.BannerController;
 import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController;
+import com.source.dinhtv.fashionecommercecore.http.request.pagination.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.banner.BannerDTO;
@@ -14,9 +15,11 @@ import com.source.dinhtv.fashionecommercecore.model.Banner;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.BannerRepository;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
+import com.source.dinhtv.fashionecommercecore.repository.specification.SearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -40,17 +43,33 @@ public class BannerService {
     @Autowired
     private BannerMapper bannerMapper;
 
-    public BaseResponse getAllBanners(int pageNum, int pageSize) {
-        verifyPageNumAndSize(pageNum,pageSize);
-
-        Specification<Banner> specs = combineSpecs(List.of(
-                isNonDeletedRecord()
-        ));
-        Page<Banner> bannerPage = bannerRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
-
-        if (bannerPage.isEmpty()) {
-            throw new ResourceNotFoundException("Không tìm thấy banner nào");
-        }
+    //    public BaseResponse getAllBanners(int pageNum, int pageSize) {
+//        verifyPageNumAndSize(pageNum,pageSize);
+//
+//        Specification<Banner> specs = combineSpecs(List.of(
+//                isNonDeletedRecord()
+//        ));
+//        Page<Banner> bannerPage = bannerRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
+//
+//        if (bannerPage.isEmpty()) {
+//            throw new ResourceNotFoundException("Không tìm thấy banner nào");
+//        }
+//
+//        List<EntityModel<BannerDTO>> BannerEntities = bannerPage.stream().map(
+//                banner -> EntityModel.of(
+//                        bannerMapper.mapToBannerDTO(banner),
+//                        linkTo(methodOn(BannerController.class).getBannerById(banner.getId())).withSelfRel())
+//        ).toList();
+//
+//        PagedModel<EntityModel<BannerDTO>> pagedModel = getPagedModel(BannerEntities,pageNum,pageSize, bannerPage.getTotalElements(), bannerPage.getTotalPages());
+//
+//        return new SuccessResponse(pagedModel);
+//
+//    }
+    public BaseResponse getAllBanners(SearchRequest request) {
+        SearchSpecification<Banner> specs = new SearchSpecification<>(request);
+        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+        Page<Banner> bannerPage = bannerRepository.findAll(specs, pageable);
 
         List<EntityModel<BannerDTO>> BannerEntities = bannerPage.stream().map(
                 banner -> EntityModel.of(
@@ -58,10 +77,9 @@ public class BannerService {
                         linkTo(methodOn(BannerController.class).getBannerById(banner.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<BannerDTO>> pagedModel = getPagedModel(BannerEntities,pageNum,pageSize, bannerPage.getTotalElements(), bannerPage.getTotalPages());
+        PagedModel<EntityModel<BannerDTO>> pagedModel = getPagedModel(BannerEntities, bannerPage.getNumber(), bannerPage.getSize(), bannerPage.getTotalElements(), bannerPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
-
     }
 
     public BaseResponse getBannerById(int id) {
@@ -69,11 +87,11 @@ public class BannerService {
 
         BannerDTO bannerDTO = bannerMapper.mapToBannerDTO(existedBanner);
 
-        Link allBannersLink = linkTo(methodOn(BannerController.class).getAllBanners(0,10)).withRel("allBanners");
+        Link allBannersLink = linkTo(methodOn(BannerController.class).getAllBanners(new SearchRequest())).withRel("allBanners");
 
         EntityModel<BannerDTO> categoryEntity = EntityModel.of(bannerDTO, allBannersLink);
 
-        return new SuccessResponse(categoryEntity);
+        return new SuccessResponse(bannerDTO);
     }
 
     public BaseResponse createBanner(BannerDTO bannerDTO) {
