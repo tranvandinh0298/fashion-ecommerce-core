@@ -1,22 +1,17 @@
-package com.source.dinhtv.fashionecommercecore.http.request;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.banner;
 
 import com.source.dinhtv.fashionecommercecore.http.request.search.FilterRequest;
 import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.request.search.SortRequest;
-import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
-@Setter
-public class BaseFilter {
-    private SearchRequest searchRequest;
-    public BaseFilter(SearchRequest request) {
-        this.searchRequest = request;
-    }
-    public SearchRequest convertFilterKey() {
+@Service
+public class BannerMapperService {
+    public static SearchRequest convertFilterKey(SearchRequest searchRequest) {
         List<FilterRequest> filters = searchRequest.getFilters();
         Iterator<FilterRequest> filterIterator = filters.iterator();
         while (filterIterator.hasNext()) {
@@ -44,7 +39,16 @@ public class BaseFilter {
         return searchRequest;
     }
 
-    public String mapDtoFieldToEntityField(String dtoFieldName) {
-        return null;
+    public static String mapDtoFieldToEntityField(String dtoFieldName) {
+        switch (dtoFieldName) {
+            case "bannerId":
+                return "id";
+            case "title":
+                return "title";
+            case "slug":
+                return "slug";
+            default:
+                return null;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.request.pagination;
+package com.source.dinhtv.fashionecommercecore.http.request.search;
 
 import com.source.dinhtv.fashionecommercecore.exception.RestAPIException;
 

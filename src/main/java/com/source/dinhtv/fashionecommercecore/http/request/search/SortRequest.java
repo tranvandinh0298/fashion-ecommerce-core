@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.request.pagination;
+package com.source.dinhtv.fashionecommercecore.http.request.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

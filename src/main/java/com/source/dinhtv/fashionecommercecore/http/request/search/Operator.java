@@ -1,8 +1,11 @@
-package com.source.dinhtv.fashionecommercecore.http.request.pagination;
+package com.source.dinhtv.fashionecommercecore.http.request.search;
 
 import jakarta.persistence.criteria.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 public enum Operator {
@@ -66,11 +69,15 @@ public enum Operator {
 
     //with this piece of code I can use nested properties on my entities.
     public <T,V> Path<V> getPath(Root<T> root, FilterRequest request) {
+        Logger logger = LoggerFactory.getLogger(Operator.class);
+        logger.info("filterRequest" + request.toString());
         String [] keys = request.getKey().split("\\.");
+        logger.info("keys: " + Arrays.toString(keys));
         Path<V> path = root.get(keys[0]);
         for (int i = 1; i < keys.length; i++) {
             path = path.get(keys[i]);
         }
+        logger.info("path: " + path.toString());
         return path;
     }
 }

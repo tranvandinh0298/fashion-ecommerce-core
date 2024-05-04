@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.request.pagination;
+package com.source.dinhtv.fashionecommercecore.http.request.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_NUMBER;
+import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,9 +21,9 @@ public class SearchRequest {
 
     private List<SortRequest> sorts;
 
-    private Integer page;
+    private Integer page = Integer.valueOf(DEFAULT_PAGE_NUMBER);
 
-    private Integer size;
+    private Integer size = Integer.valueOf(DEFAULT_PAGE_SIZE);
 
     public List<FilterRequest> getFilters() {
         if (Objects.isNull(this.filters)) return new ArrayList<>();

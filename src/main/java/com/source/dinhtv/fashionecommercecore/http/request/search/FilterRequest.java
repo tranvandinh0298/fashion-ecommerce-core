@@ -1,6 +1,5 @@
-package com.source.dinhtv.fashionecommercecore.http.request.pagination;
+package com.source.dinhtv.fashionecommercecore.http.request.search;
 
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
