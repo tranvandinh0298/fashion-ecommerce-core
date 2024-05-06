@@ -1,14 +1,19 @@
 package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
+import com.source.dinhtv.fashionecommercecore.http.controller.BannerController;
 import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController;
+import com.source.dinhtv.fashionecommercecore.http.request.BannerFilter;
+import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryWithImageDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryWithParentCategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryMapper;
 import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.repository.CategoryRepository;
+import com.source.dinhtv.fashionecommercecore.repository.specification.DynamicalSpecification;
+import com.source.dinhtv.fashionecommercecore.repository.specification.SearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +27,7 @@ import java.util.List;
 
 import static com.source.dinhtv.fashionecommercecore.repository.CategoryRepository.isRegularCategory;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
-import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.CATEGORY_TYPE;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;
-import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.verifyPageNumAndSize;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -36,29 +39,22 @@ public class CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    public BaseResponse getAllCategories(int pageNum, int pageSize) {
-        verifyPageNumAndSize(pageNum,pageSize);
+    public BaseResponse getAllCategories(SearchRequest request) {
+        new BannerFilter(request).convertFilterKey();
 
-        Specification<Category> specs = combineSpecs(List.of(
-                isRegularCategory(),
-                isNonDeletedRecord()
-        ));
-        Page<Category> categoriesPage = categoryRepository.findAll(specs, PageRequest.of(pageNum, pageSize));
+        SearchSpecification<Category> specs = new DynamicalSpecification<>(request, List.of(isNonDeletedRecord()));
 
-        if (categoriesPage.isEmpty()) {
-            throw new ResourceNotFoundException("Không tìm thấy thể loại nào");
-        }
+        Page<Category> bannerPage = categoryRepository.findAll(specs, PageRequest.of(request.getPage(), request.getSize()));
 
-        List<EntityModel<CategoryWithImageDTO>> CategoryEntities = categoriesPage.stream().map(
+        List<EntityModel<CategoryWithParentCategoryDTO>> BannerEntities = bannerPage.stream().map(
                 category -> EntityModel.of(
-                        categoryMapper.mapToCategoryAndImageDTO(category),
-                        linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel())
+                        categoryMapper.mapToCategoryWithParentCategoryDTO(category),
+                        linkTo(methodOn(BannerController.class).getBannerById(category.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<CategoryWithImageDTO>> pagedModel = getPagedModel(CategoryEntities,pageNum,pageSize, categoriesPage.getTotalElements(), categoriesPage.getTotalPages());
+        PagedModel<EntityModel<CategoryWithParentCategoryDTO>> pagedModel = getPagedModel(BannerEntities, bannerPage.getNumber(), bannerPage.getSize(), bannerPage.getTotalElements(), bannerPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
-
     }
 
     public BaseResponse getCategoryById(int id) {
@@ -66,7 +62,7 @@ public class CategoryService {
 
         CategoryDTO categoryDTO = categoryMapper.mapToCategoryDTO(existedCategory);
 
-        Link allCategoriesLink = linkTo(methodOn(CategoryController.class).getAllCategories(0,10)).withRel("allCategories");
+        Link allCategoriesLink = linkTo(methodOn(CategoryController.class).getAllCategories(new SearchRequest())).withRel("allCategories");
 
         EntityModel<CategoryDTO> categoryEntity = EntityModel.of(categoryDTO, allCategoriesLink);
 
@@ -75,7 +71,6 @@ public class CategoryService {
 
     public BaseResponse createCategory(CategoryDTO categoryDTO) {
         Category category = categoryMapper.mapToCategory(categoryDTO);
-        category.setType(CATEGORY_TYPE);
 
         categoryRepository.save(category);
 

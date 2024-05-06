@@ -31,6 +31,7 @@ public class Banner extends SoftDeleting {
     private String slug;
 
     @NotBlank
+    @Column(name="photo")
     private String photo;
 
     @NotBlank

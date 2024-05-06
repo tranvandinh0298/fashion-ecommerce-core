@@ -1,13 +1,20 @@
 package com.source.dinhtv.fashionecommercecore.http.controller;
 
+import com.source.dinhtv.fashionecommercecore.exception.GlobalExceptionHandler;
+import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.service.CategoryService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_LIMIT;
 import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAULT_PAGE_NUMBER;
@@ -15,14 +22,19 @@ import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.DEFAU
 @RestController
 @RequestMapping("v1/api/categories")
 public class CategoryController {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @Autowired
     private CategoryService categoryService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> getAllCategories(
-            @RequestParam(name = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(name = "limit", required = false, defaultValue = DEFAULT_PAGE_LIMIT) int limit) {
-        return new ResponseEntity<>(this.categoryService.getAllCategories(page, limit), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> getAllCategories(@RequestBody(required = false) SearchRequest request) {
+        logger.info("incoming request:" + request.toString());
+
+        if (Objects.isNull(request)) {
+            request = new SearchRequest();
+        }
+
+        return new ResponseEntity<>(categoryService.getAllCategories(request), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +52,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.updateCategory(id, categoryDTO), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/soft-delete/{id}")
+    @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<BaseResponse> softDeleteCategory(@PathVariable int id) {
         return new ResponseEntity<>(categoryService.softDeleteCategory(id), HttpStatus.OK);
     }

@@ -90,7 +90,7 @@ public class BannerService {
 
         bannerRepository.save(existedBanner);
 
-        return new SuccessResponse();
+        return new SuccessResponse(true);
     }
 
     public BaseResponse deleteBanner(int id) {

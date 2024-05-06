@@ -1,6 +1,5 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category;
 
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CategoryWithImageAndProductsDTO extends CategoryWithImageDTO{
-    public List<ProductDTO> productDTOs;
+public class CategoryWithParentCategoryDTO extends CategoryDTO{
+    public CategoryDTO parentCategoryDTO;
 }

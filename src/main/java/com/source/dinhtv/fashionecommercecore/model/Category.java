@@ -31,29 +31,34 @@ public class Category extends SoftDeleting {
     private Integer id;
 
     @NotBlank
-    @Column(name="name")
-    private String name;
+    @Column(name="title")
+    private String title;
 
     @NotBlank
     @Column(name="slug")
     private String slug;
 
     @NotBlank
-    @Column(name="description")
-    private String description;
+    @Column(name="summary")
+    private String summary;
+
+    @NotBlank
+    @Column(name="photo")
+    private String photo;
+
+    @NotNull
+    @Column(name="is_parent")
+    private Boolean isParent;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Category parentCategory;
+
+    @OneToOne
+    @JoinColumn(name="added_by")
+    private User user;
 
     @NotNull
     @Column(name="status")
     private Integer status;
-
-    @NotNull
-    @Column(name="type")
-    private Integer type;
-
-    @OneToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
-
-    @ManyToMany(mappedBy = "categories")
-    private List<Product> products;
 }

@@ -48,7 +48,7 @@ public class BannerController {
         return new ResponseEntity<>(bannerService.updateBanner(id, bannerDTO), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/soft-delete/{id}")
+    @DeleteMapping("/{id}/soft-delete")
     public ResponseEntity<BaseResponse> softDeleteBanner(@PathVariable int id) {
         return new ResponseEntity<>(bannerService.softDeleteBanner(id), HttpStatus.OK);
     }

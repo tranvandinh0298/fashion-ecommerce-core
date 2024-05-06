@@ -18,6 +18,8 @@ public class BannerFilter extends BaseFilter{
                 return "title";
             case "slug":
                 return "slug";
+            case "status":
+                return "status";
             default:
                 return null;
         }

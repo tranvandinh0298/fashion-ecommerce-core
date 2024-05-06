@@ -1,6 +1,6 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category;
 
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CategoryWithImageDTO extends CategoryDTO{
-    public ImageDTO imageDTO;
+public class CategoryWithUserDTO extends CategoryDTO{
+    public UserDTO userDTO;
 }

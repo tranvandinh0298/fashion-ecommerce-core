@@ -25,5 +25,6 @@ public interface BannerMapper {
     Banner mapToBanner(BannerDTO bannerDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "slug", ignore = true)
     void updateFromBannerDTO(BannerDTO bannerDTO, @MappingTarget Banner banner);
 }
