@@ -4,6 +4,8 @@ import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundExceptio
 import com.source.dinhtv.fashionecommercecore.http.controller.BannerController;
 import com.source.dinhtv.fashionecommercecore.http.controller.CategoryController;
 import com.source.dinhtv.fashionecommercecore.http.request.BannerFilter;
+import com.source.dinhtv.fashionecommercecore.http.request.BaseFilter;
+import com.source.dinhtv.fashionecommercecore.http.request.CategoryFilter;
 import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
@@ -24,9 +26,11 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
-import static com.source.dinhtv.fashionecommercecore.repository.CategoryRepository.isRegularCategory;
 import static com.source.dinhtv.fashionecommercecore.repository.specification.BaseSpecification.*;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.IS_NOT_PARENT_CATEGORY;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.IS_PARENT_CATEGORY;
 import static com.source.dinhtv.fashionecommercecore.utils.PaginationUtil.getPagedModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -40,27 +44,56 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
     public BaseResponse getAllCategories(SearchRequest request) {
-        new BannerFilter(request).convertFilterKey();
+        // filter object
+        BaseFilter categoryFilter = new CategoryFilter(request);
+        categoryFilter.convertFilterKey();
+        categoryFilter.appendSpecs(isNonDeletedRecord());
 
-        SearchSpecification<Category> specs = new DynamicalSpecification<>(request, List.of(isNonDeletedRecord()));
+        // specs
+        SearchSpecification<Category> specs = new DynamicalSpecification<>(request, categoryFilter.getAdditionalSpecs());
 
-        Page<Category> bannerPage = categoryRepository.findAll(specs, PageRequest.of(request.getPage(), request.getSize()));
+        // page with categories
+        Page<Category> categoryPage = categoryRepository.findAll(specs, PageRequest.of(request.getPage(), request.getSize()));
 
-        List<EntityModel<CategoryWithParentCategoryDTO>> BannerEntities = bannerPage.stream().map(
+        // convert entities to DTOs
+        List<EntityModel<CategoryWithParentCategoryDTO>> CategoryEntities = categoryPage.stream().map(
                 category -> EntityModel.of(
                         categoryMapper.mapToCategoryWithParentCategoryDTO(category),
-                        linkTo(methodOn(BannerController.class).getBannerById(category.getId())).withSelfRel())
+                        linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel())
         ).toList();
 
-        PagedModel<EntityModel<CategoryWithParentCategoryDTO>> pagedModel = getPagedModel(BannerEntities, bannerPage.getNumber(), bannerPage.getSize(), bannerPage.getTotalElements(), bannerPage.getTotalPages());
+        // page with categoryDTOs
+        PagedModel<EntityModel<CategoryWithParentCategoryDTO>> pagedModel = getPagedModel(CategoryEntities, categoryPage.getNumber(), categoryPage.getSize(), categoryPage.getTotalElements(), categoryPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
+    }
+
+    public BaseResponse getAllCategoriesWithoutPagination(SearchRequest request) {
+        // filter object
+        BaseFilter categoryFilter = new CategoryFilter(request);
+        categoryFilter.convertFilterKey();
+        categoryFilter.appendSpecs(isNonDeletedRecord());
+
+        // specs
+        SearchSpecification<Category> specs = new DynamicalSpecification<>(request, categoryFilter.getAdditionalSpecs());
+
+        // categories
+        List<Category> categories = categoryRepository.findAll(specs);
+
+        // convert entities to DTOs
+        List<EntityModel<CategoryWithParentCategoryDTO>> CategoryEntities = categories.stream().map(
+                category -> EntityModel.of(
+                        categoryMapper.mapToCategoryWithParentCategoryDTO(category),
+                        linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel())
+        ).toList();
+
+        return new SuccessResponse(CategoryEntities);
     }
 
     public BaseResponse getCategoryById(int id) {
         Category existedCategory = findByIdOrThrowEx(id);
 
-        CategoryDTO categoryDTO = categoryMapper.mapToCategoryDTO(existedCategory);
+        CategoryDTO categoryDTO = categoryMapper.mapToCategoryWithParentCategoryDTO(existedCategory);
 
         Link allCategoriesLink = linkTo(methodOn(CategoryController.class).getAllCategories(new SearchRequest())).withRel("allCategories");
 
@@ -70,17 +103,31 @@ public class CategoryService {
     }
 
     public BaseResponse createCategory(CategoryDTO categoryDTO) {
-        Category category = categoryMapper.mapToCategory(categoryDTO);
+        Category incomingCategory = categoryMapper.mapToCategory(categoryDTO);
 
-        categoryRepository.save(category);
+        if (incomingCategory.getIsParent().equals(IS_NOT_PARENT_CATEGORY) && categoryDTO.getParentCategoryId() != null) {
+            Category parentCategory = findByIdOrThrowEx(categoryDTO.getParentCategoryId());
 
-        return new SuccessResponse(categoryMapper.mapToCategoryDTO(category));
+            incomingCategory.setParentCategory(parentCategory);
+        }
+
+        categoryRepository.save(incomingCategory);
+
+        return new SuccessResponse(categoryMapper.mapToCategoryDTO(incomingCategory));
     }
 
     public BaseResponse updateCategory(int id, CategoryDTO categoryDTO) {
         Category existedCategory = findByIdOrThrowEx(id);
 
-        categoryMapper.updateFromCategoryDTO(categoryDTO, existedCategory);
+        Category incomingCategory = categoryMapper.mapToCategory(categoryDTO);
+
+        if (incomingCategory.getIsParent().equals(IS_NOT_PARENT_CATEGORY) && categoryDTO.getParentCategoryId() != null) {
+            Category parentCategory = findByIdOrThrowEx(categoryDTO.getParentCategoryId());
+
+            existedCategory.setParentCategory(parentCategory);
+        }
+
+        categoryMapper.updateCategory(incomingCategory, existedCategory);
 
         categoryRepository.save(existedCategory);
 
@@ -94,19 +141,18 @@ public class CategoryService {
 
         categoryRepository.save(existedCategory);
 
-        return new SuccessResponse();
+        return new SuccessResponse(true);
     }
 
     public BaseResponse deleteCategory(int id) {
         categoryRepository.deleteById(id);
 
-        return new SuccessResponse();
+        return new SuccessResponse(true);
     }
 
     private Category findByIdOrThrowEx(int id) {
         Specification<Category> spec = combineSpecs(List.of(
                 hasId(id),
-                isRegularCategory(),
                 isNonDeletedRecord()
         ));
         return this.categoryRepository.findOne(spec).orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thể loại cần tìm với id: " + id));

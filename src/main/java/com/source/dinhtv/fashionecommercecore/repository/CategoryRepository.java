@@ -6,16 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.CATEGORY_TYPE;
-import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.COLLECTION_TYPE;
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.*;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer>, JpaSpecificationExecutor<Category> {
-    public static Specification<Category> isRegularCategory() {
-        return (root, query, cb) -> cb.equal(root.get("type"), CATEGORY_TYPE);
+    public static Specification<Category> isParent() {
+        return (root, query, cb) -> cb.equal(root.get("is_parent"), IS_PARENT_CATEGORY);
     }
 
-    public static Specification<Category> isCollection() {
-        return (root, query, cb) -> cb.equal(root.get("type"), COLLECTION_TYPE);
+    public static Specification<Category> isNotParent() {
+        return (root, query, cb) -> cb.equal(root.get("is_parent"), IS_NOT_PARENT_CATEGORY);
+    }
+
+    public static Specification<Category> hasParentCategoryId(int parentCategoryId) {
+        return (root, query, cb) -> cb.equal(root.get("parentCategory").get("id"), parentCategoryId);
     }
 }

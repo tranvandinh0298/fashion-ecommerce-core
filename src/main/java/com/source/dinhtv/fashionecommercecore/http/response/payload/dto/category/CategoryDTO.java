@@ -20,6 +20,8 @@ public class CategoryDTO extends BaseDTO {
     public String slug;
     public String summary;
     public String photo;
-    public String isParent;
+    public Integer isParent;
+    public Integer parentCategoryId;
+    public Integer addedBy;
     public String status;
 }

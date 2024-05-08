@@ -12,13 +12,6 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Entity
-//@Table(name="categories")
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -48,7 +41,7 @@ public class Category extends SoftDeleting {
 
     @NotNull
     @Column(name="is_parent")
-    private Boolean isParent;
+    private Integer isParent;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -60,5 +53,5 @@ public class Category extends SoftDeleting {
 
     @NotNull
     @Column(name="status")
-    private Integer status;
+    private String status;
 }

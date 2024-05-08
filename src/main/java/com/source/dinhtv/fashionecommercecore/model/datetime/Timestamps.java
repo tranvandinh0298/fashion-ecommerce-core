@@ -25,28 +25,4 @@ public class Timestamps {
     @Column(name="updated_at", updatable = true)
     @UpdateTimestamp
     protected Date updatedAt;
-
-//    public Timestamps() {
-//    }
-//
-//    public Timestamps(Date createdAt, Date updatedAt) {
-//        this.createdAt = createdAt;
-//        this.updatedAt = updatedAt;
-//    }
-//
-//    public Date getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(Date createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public Date getUpdatedAt() {
-//        return updatedAt;
-//    }
-//
-//    public void setUpdatedAt(Date updatedAt) {
-//        this.updatedAt = updatedAt;
-//    }
 }

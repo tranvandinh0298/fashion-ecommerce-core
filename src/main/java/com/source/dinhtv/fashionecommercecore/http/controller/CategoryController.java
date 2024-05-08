@@ -5,6 +5,7 @@ import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryWithParentCategoryDTO;
 import com.source.dinhtv.fashionecommercecore.service.CategoryService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,7 +29,18 @@ public class CategoryController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse> getAllCategories(@RequestBody(required = false) SearchRequest request) {
-        logger.info("incoming request:" + request.toString());
+        logger.info("getAllCategories -> incoming request:" + request.toString());
+
+        if (Objects.isNull(request)) {
+            request = new SearchRequest();
+        }
+
+        return new ResponseEntity<>(categoryService.getAllCategories(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/without-pagination")
+    public ResponseEntity<BaseResponse> getAllCategoriesWithoutPagination(@RequestBody(required = false) SearchRequest request) {
+        logger.info("getAllCategoriesWithoutPagination -> incoming request:" + request.toString());
 
         if (Objects.isNull(request)) {
             request = new SearchRequest();
