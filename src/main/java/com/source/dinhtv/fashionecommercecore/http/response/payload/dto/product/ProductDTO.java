@@ -32,7 +32,7 @@ public class ProductDTO extends BaseDTO {
     public Integer stock;
     public String size;
     public String condition;
-    public Integer status;
+    public String status;
     public Double price;
     public Double discount;
     public Integer isFeatured;

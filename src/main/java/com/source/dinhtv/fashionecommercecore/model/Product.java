@@ -52,12 +52,12 @@ public class Product extends SoftDeleting {
     private String size;
 
     @NotBlank
-    @Column(name="condition")
+    @Column(name="`condition`")
     private String condition;
 
     @NotNull
     @Column(name="status")
-    private Integer status;
+    private String status;
 
     @NotNull
     @Column(name="price")
