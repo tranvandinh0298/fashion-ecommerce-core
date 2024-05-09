@@ -107,7 +107,7 @@ public class AttributeService {
         return new SuccessResponse();
     }
 
-    private Attribute findByIdOrThrowEx(int id) {
+    protected Attribute findByIdOrThrowEx(int id) {
         Specification<Attribute> spec = combineSpecs(List.of(
                 hasId(id),
                 isNonDeletedRecord()

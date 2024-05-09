@@ -24,39 +24,62 @@ public class Product extends SoftDeleting {
     private Integer id;
 
     @NotBlank
-    @Column(name="name")
-    private String name;
+    @Column(name="title")
+    private String title;
 
     @NotBlank
     @Column(name="slug")
     private String slug;
 
     @NotBlank
-    @Column(name="code")
-    private String code;
+    @Column(name="summary")
+    private String summary;
 
     @NotBlank
     @Column(name="description")
     private String description;
 
+    @NotBlank
+    @Column(name="photo")
+    private String photo;
+
+    @NotNull
+    @Column(name="stock")
+    private Integer stock;
+
+    @NotBlank
+    @Column(name="size")
+    private String size;
+
+    @NotBlank
+    @Column(name="condition")
+    private String condition;
+
     @NotNull
     @Column(name="status")
     private Integer status;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    private List<Sku> skus;
+    @NotNull
+    @Column(name="price")
+    private Double price;
 
-    @ManyToMany
-    @JoinTable(name = "image_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private List<Image> images;
+    @NotNull
+    @Column(name="discount")
+    private Double discount;
 
-    @ManyToMany
-    @JoinTable(name = "category_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categories;
+    @NotNull
+    @Column(name="is_featured")
+    private Integer isFeatured;
+
+    @OneToOne
+    @JoinColumn(name = "cat_id")
+    private Category category;
+
+    @OneToOne
+    @JoinColumn(name = "child_cat_id")
+    private Category childCategory;
+
+    @OneToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 }

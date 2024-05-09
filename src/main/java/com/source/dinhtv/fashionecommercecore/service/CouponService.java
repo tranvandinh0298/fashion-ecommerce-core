@@ -2,12 +2,16 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.CouponController;
+import com.source.dinhtv.fashionecommercecore.http.controller.CouponController;
+import com.source.dinhtv.fashionecommercecore.http.request.CouponFilter;
+import com.source.dinhtv.fashionecommercecore.http.request.BaseFilter;
 import com.source.dinhtv.fashionecommercecore.http.request.CouponFilter;
 import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.coupon.CouponDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.coupon.CouponMapper;
+import com.source.dinhtv.fashionecommercecore.model.Coupon;
 import com.source.dinhtv.fashionecommercecore.model.Coupon;
 import com.source.dinhtv.fashionecommercecore.repository.CouponRepository;
 import com.source.dinhtv.fashionecommercecore.repository.specification.DynamicalSpecification;
@@ -51,6 +55,28 @@ public class CouponService {
         PagedModel<EntityModel<CouponDTO>> pagedModel = getPagedModel(CouponEntities, couponPage.getNumber(), couponPage.getSize(), couponPage.getTotalElements(), couponPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
+    }
+
+    public BaseResponse getAllCouponsWithoutPagination(SearchRequest request) {
+        // filter object
+        BaseFilter couponFilter = new CouponFilter(request);
+        couponFilter.convertFilterKey();
+        couponFilter.appendSpecs(isNonDeletedRecord());
+
+        // specs
+        SearchSpecification<Coupon> specs = new DynamicalSpecification<>(request, couponFilter.getAdditionalSpecs());
+
+        // coupons
+        List<Coupon> coupons = couponRepository.findAll(specs);
+
+        // convert entities to DTOs
+        List<EntityModel<CouponDTO>> CouponEntities = coupons.stream().map(
+                coupon -> EntityModel.of(
+                        couponMapper.mapToCouponDTO(coupon),
+                        linkTo(methodOn(CouponController.class).getCouponById(coupon.getId())).withSelfRel())
+        ).toList();
+
+        return new SuccessResponse(CouponEntities);
     }
 
     public BaseResponse getCouponById(int id) {
@@ -99,7 +125,7 @@ public class CouponService {
         return new SuccessResponse();
     }
 
-    private Coupon findByIdOrThrowEx(int id) {
+    protected Coupon findByIdOrThrowEx(int id) {
         Specification<Coupon> spec = combineSpecs(List.of(
                 hasId(id),
                 isNonDeletedRecord()

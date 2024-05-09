@@ -35,6 +35,17 @@ public class CouponController {
         return new ResponseEntity<>(couponService.getAllCoupons(request), HttpStatus.OK);
     }
 
+    @GetMapping("/without-pagination")
+    public ResponseEntity<BaseResponse> getAllCouponsWithoutPagination(@RequestBody(required = false) SearchRequest request) {
+        logger.info("getAllCouponsWithoutPagination -> incoming request:" + request.toString());
+
+        if (Objects.isNull(request)) {
+            request = new SearchRequest();
+        }
+
+        return new ResponseEntity<>(couponService.getAllCouponsWithoutPagination(request), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> getCouponById(@PathVariable int id) {
         return new ResponseEntity<>(couponService.getCouponById(id), HttpStatus.OK);

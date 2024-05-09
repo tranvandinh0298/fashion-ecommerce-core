@@ -33,6 +33,17 @@ public class BannerController {
         return new ResponseEntity<>(bannerService.getAllBanners(request), HttpStatus.OK);
     }
 
+    @GetMapping("/without-pagination")
+    public ResponseEntity<BaseResponse> getAllBannersWithoutPagination(@RequestBody(required = false) SearchRequest request) {
+        logger.info("getAllBannersWithoutPagination -> incoming request:" + request.toString());
+
+        if (Objects.isNull(request)) {
+            request = new SearchRequest();
+        }
+
+        return new ResponseEntity<>(bannerService.getAllBannersWithoutPagination(request), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> getBannerById(@PathVariable int id) {
         return new ResponseEntity<>(bannerService.getBannerById(id), HttpStatus.OK);

@@ -117,7 +117,7 @@ public class ImageService {
         return new SuccessResponse();
     }
 
-    private Image findByIdOrThrowEx(int id) {
+    protected Image findByIdOrThrowEx(int id) {
         Specification<Image> spec = combineSpecs(List.of(
                 hasId(id),
                 isNonDeletedRecord()

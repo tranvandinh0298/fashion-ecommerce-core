@@ -11,8 +11,8 @@ import java.util.Objects;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-
     // Mapping for sole Category
+    @Named("mapToCategoryDTO")
     @Mapping(source = "id", target = "categoryId")
     CategoryDTO mapToCategoryDTO(Category category);
 

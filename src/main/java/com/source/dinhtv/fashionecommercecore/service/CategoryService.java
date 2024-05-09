@@ -150,7 +150,7 @@ public class CategoryService {
         return new SuccessResponse(true);
     }
 
-    private Category findByIdOrThrowEx(int id) {
+    protected Category findByIdOrThrowEx(int id) {
         Specification<Category> spec = combineSpecs(List.of(
                 hasId(id),
                 isNonDeletedRecord()

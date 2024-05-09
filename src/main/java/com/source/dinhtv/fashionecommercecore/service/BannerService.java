@@ -2,12 +2,16 @@ package com.source.dinhtv.fashionecommercecore.service;
 
 import com.source.dinhtv.fashionecommercecore.exception.ResourceNotFoundException;
 import com.source.dinhtv.fashionecommercecore.http.controller.BannerController;
+import com.source.dinhtv.fashionecommercecore.http.controller.BannerController;
+import com.source.dinhtv.fashionecommercecore.http.request.BannerFilter;
+import com.source.dinhtv.fashionecommercecore.http.request.BaseFilter;
 import com.source.dinhtv.fashionecommercecore.http.request.BannerFilter;
 import com.source.dinhtv.fashionecommercecore.http.request.search.SearchRequest;
 import com.source.dinhtv.fashionecommercecore.http.response.BaseResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.SuccessResponse;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.banner.BannerDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.banner.BannerMapper;
+import com.source.dinhtv.fashionecommercecore.model.Banner;
 import com.source.dinhtv.fashionecommercecore.model.Banner;
 import com.source.dinhtv.fashionecommercecore.repository.BannerRepository;
 import com.source.dinhtv.fashionecommercecore.repository.specification.DynamicalSpecification;
@@ -51,6 +55,28 @@ public class BannerService {
         PagedModel<EntityModel<BannerDTO>> pagedModel = getPagedModel(BannerEntities, bannerPage.getNumber(), bannerPage.getSize(), bannerPage.getTotalElements(), bannerPage.getTotalPages());
 
         return new SuccessResponse(pagedModel);
+    }
+
+    public BaseResponse getAllBannersWithoutPagination(SearchRequest request) {
+        // filter object
+        BaseFilter bannerFilter = new BannerFilter(request);
+        bannerFilter.convertFilterKey();
+        bannerFilter.appendSpecs(isNonDeletedRecord());
+
+        // specs
+        SearchSpecification<Banner> specs = new DynamicalSpecification<>(request, bannerFilter.getAdditionalSpecs());
+
+        // banners
+        List<Banner> banners = bannerRepository.findAll(specs);
+
+        // convert entities to DTOs
+        List<EntityModel<BannerDTO>> BannerEntities = banners.stream().map(
+                banner -> EntityModel.of(
+                        bannerMapper.mapToBannerDTO(banner),
+                        linkTo(methodOn(BannerController.class).getBannerById(banner.getId())).withSelfRel())
+        ).toList();
+
+        return new SuccessResponse(BannerEntities);
     }
 
     public BaseResponse getBannerById(int id) {
@@ -99,7 +125,7 @@ public class BannerService {
         return new SuccessResponse();
     }
 
-    private Banner findByIdOrThrowEx(int id) {
+    protected Banner findByIdOrThrowEx(int id) {
         Specification<Banner> spec = combineSpecs(List.of(
                 hasId(id),
                 isNonDeletedRecord()

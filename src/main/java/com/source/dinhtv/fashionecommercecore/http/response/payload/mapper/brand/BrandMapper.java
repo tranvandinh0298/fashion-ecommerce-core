@@ -12,6 +12,7 @@ public interface BrandMapper {
     /**
      * Only Brand
      * */
+    @Named("mapToBrandDTO")
     @Mapping(source = "id", target = "brandId")
     BrandDTO mapToBrandDTO(Brand brand);
 

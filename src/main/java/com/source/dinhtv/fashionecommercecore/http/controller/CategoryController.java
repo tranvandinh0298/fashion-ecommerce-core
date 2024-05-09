@@ -46,7 +46,7 @@ public class CategoryController {
             request = new SearchRequest();
         }
 
-        return new ResponseEntity<>(categoryService.getAllCategories(request), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getAllCategoriesWithoutPagination(request), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -128,7 +128,7 @@ public class AttributeOptionService {
         return new SuccessResponse();
     }
 
-    private Option findByIdOrThrowEx(int attributeId, int optionId) {
+    protected Option findByIdOrThrowEx(int attributeId, int optionId) {
         Specification<Option> spec = combineSpecs(List.of(
                 withAttributeId(attributeId),
                 withNonDeletedAttribute(),
