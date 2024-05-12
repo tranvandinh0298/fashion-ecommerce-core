@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
+    @Mapping(source = "id", target = "userId")
     UserDTO userToUserDTO(User user);
 
     User userDTOtoUser(UserDTO userDTO);

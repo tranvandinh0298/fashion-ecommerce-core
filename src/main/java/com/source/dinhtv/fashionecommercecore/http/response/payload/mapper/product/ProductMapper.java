@@ -2,14 +2,10 @@ package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.prod
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.*;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.banner.BannerMapper;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.brand.BrandMapper;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.sku.SkuMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.product.ProductMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image.ImageMapper;
 import com.source.dinhtv.fashionecommercecore.model.Product;
-import com.source.dinhtv.fashionecommercecore.model.Product;
+import jdk.jfr.Name;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -20,6 +16,7 @@ import java.util.Objects;
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class, BrandMapper.class})
 public interface ProductMapper {
     // Mapping for sole Product
+    @Named("mapToProductDTO")
     @Mapping(source = "id", target = "productId")
     ProductDTO mapToProductDTO(Product product);
 

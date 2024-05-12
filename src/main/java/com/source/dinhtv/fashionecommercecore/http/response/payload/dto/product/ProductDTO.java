@@ -1,21 +1,11 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.sku.SkuDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.image.ImageDTO;
-import com.source.dinhtv.fashionecommercecore.model.Brand;
-import com.source.dinhtv.fashionecommercecore.model.Category;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Getter
 @Setter

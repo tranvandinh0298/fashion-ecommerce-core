@@ -1,11 +1,7 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.banner;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.banner.BannerDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.image.ImageMapper;
-import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.product.ProductMapper;
 import com.source.dinhtv.fashionecommercecore.model.Banner;
-import com.source.dinhtv.fashionecommercecore.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

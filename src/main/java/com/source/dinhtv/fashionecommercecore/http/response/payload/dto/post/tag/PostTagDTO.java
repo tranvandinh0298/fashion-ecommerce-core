@@ -1,4 +1,4 @@
-package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category;
+package com.source.dinhtv.fashionecommercecore.http.response.payload.dto.post.tag;
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.BaseDTO;
 import lombok.AllArgsConstructor;
@@ -12,14 +12,9 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CategoryDTO extends BaseDTO {
-    public Integer categoryId;
+public class PostTagDTO extends BaseDTO {
+    public Integer postTagId;
     public String title;
     public String slug;
-    public String summary;
-    public String photo;
-    public Integer isParent;
-    public Integer parentCategoryId;
-    public Integer addedBy;
     public String status;
 }
