@@ -1,17 +1,18 @@
 package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.product;
 
+import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.category.CategoryDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.ProductDTO;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.product.*;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.brand.BrandMapper;
 import com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.category.CategoryMapper;
+import com.source.dinhtv.fashionecommercecore.model.Category;
 import com.source.dinhtv.fashionecommercecore.model.Product;
 import jdk.jfr.Name;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.Objects;
+
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.IMAGE_URL;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class, BrandMapper.class})
 public interface ProductMapper {
@@ -33,10 +34,12 @@ public interface ProductMapper {
     @Mapping(source = "brand", target = "brandDTO", qualifiedByName = "mapToBrandDTO")
     ProductWithCategoriesAndBrandDTO mapToProductWithCategoriesAndBrandDTO(Product product);
 
-//    @Named("mapParentProduct")
-//    default ProductDTO mapParentProduct(Product parentProduct) {
-//        return !Objects.isNull(parentProduct) ? mapToProductDTO(parentProduct) : null;
-//    }
-
+    @AfterMapping
+    default void addImageBaseUrl(Product product, @MappingTarget ProductDTO productDTO ) {
+        String baseUrl = IMAGE_URL;
+        if (product.getPhoto() != null) {
+            productDTO.setPhoto(baseUrl + product.getPhoto());
+        }
+    }
     
 }

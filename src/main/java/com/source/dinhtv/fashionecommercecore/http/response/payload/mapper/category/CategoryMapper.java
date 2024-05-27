@@ -7,6 +7,8 @@ import org.mapstruct.*;
 
 import java.util.Objects;
 
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.IMAGE_URL;
+
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
     // Mapping for sole Category
@@ -30,5 +32,13 @@ public interface CategoryMapper {
     @Named("mapParentCategory")
     default CategoryDTO mapParentCategory(Category parentCategory) {
         return !Objects.isNull(parentCategory) ? mapToCategoryDTO(parentCategory) : null;
+    }
+
+    @AfterMapping
+    default void addImageBaseUrl(Category category, @MappingTarget CategoryDTO categoryDTO ) {
+        String baseUrl = IMAGE_URL;
+        if (category.getPhoto() != null) {
+            categoryDTO.setPhoto(baseUrl + category.getPhoto());
+        }
     }
 }

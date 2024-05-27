@@ -38,6 +38,9 @@ public class Banner extends SoftDeleting {
     @Column(name="description")
     private String description;
 
+    @Column(name="link")
+    private String link;
+
     @NotNull
     @Column(name="status")
     private String status;

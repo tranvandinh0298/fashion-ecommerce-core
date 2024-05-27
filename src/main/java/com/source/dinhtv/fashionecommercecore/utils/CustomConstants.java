@@ -12,4 +12,6 @@ public class CustomConstants {
 
     public static final Integer IS_NOT_PARENT_CATEGORY = 0;
     public static final Integer IS_PARENT_CATEGORY = 1;
+
+    public static final String IMAGE_URL = "http://localhost:8000";
 }

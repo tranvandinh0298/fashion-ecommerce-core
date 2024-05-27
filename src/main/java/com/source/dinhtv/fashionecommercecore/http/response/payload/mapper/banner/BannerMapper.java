@@ -2,10 +2,9 @@ package com.source.dinhtv.fashionecommercecore.http.response.payload.mapper.bann
 
 import com.source.dinhtv.fashionecommercecore.http.response.payload.dto.banner.BannerDTO;
 import com.source.dinhtv.fashionecommercecore.model.Banner;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
+
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.IMAGE_URL;
 
 @Mapper(componentModel = "spring")
 public interface BannerMapper {
@@ -23,4 +22,12 @@ public interface BannerMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "slug", ignore = true)
     void updateFromBannerDTO(BannerDTO bannerDTO, @MappingTarget Banner banner);
+
+    @AfterMapping
+    default void addImageBaseUrl(Banner banner, @MappingTarget BannerDTO bannerDTO ) {
+        String baseUrl = IMAGE_URL;
+        if (banner.getPhoto() != null) {
+            bannerDTO.setPhoto(baseUrl + banner.getPhoto());
+        }
+    }
 }

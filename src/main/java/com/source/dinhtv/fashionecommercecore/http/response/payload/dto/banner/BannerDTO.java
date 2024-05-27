@@ -24,5 +24,6 @@ public class BannerDTO extends BaseDTO {
     public String slug;
     public String photo;
     public String description;
+    public String link;
     public String status;
 }
