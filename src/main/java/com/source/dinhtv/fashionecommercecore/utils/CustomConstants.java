@@ -14,4 +14,6 @@ public class CustomConstants {
     public static final Integer IS_PARENT_CATEGORY = 1;
 
     public static final String IMAGE_URL = "http://localhost:8000";
+
+    public static final String CROSS_ORIGIN = "http://localhost:3000";
 }

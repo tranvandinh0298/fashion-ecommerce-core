@@ -22,6 +22,10 @@ public class BannerFilter extends BaseFilter{
                 return "slug";
             case "status":
                 return "status";
+            case "createdAt":
+                return "createdAt";
+            case "updatedAt":
+                return "updatedAt";
             default:
                 return null;
         }

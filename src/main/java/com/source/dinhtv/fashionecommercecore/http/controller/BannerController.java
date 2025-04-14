@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
+import static com.source.dinhtv.fashionecommercecore.utils.CustomConstants.CROSS_ORIGIN;
+
 @RestController
 @RequestMapping("v1/api/banners")
+@CrossOrigin(origins = CROSS_ORIGIN)
 public class BannerController {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @Autowired
@@ -25,6 +28,17 @@ public class BannerController {
     @GetMapping()
     public ResponseEntity<BaseResponse> getAllBanners(@RequestBody(required = false) SearchRequest request) {
         logger.info("incoming request:" + request.toString());
+
+        if (Objects.isNull(request)) {
+            request = new SearchRequest();
+        }
+
+        return new ResponseEntity<>(bannerService.getAllBanners(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/retrieve")
+    public ResponseEntity<BaseResponse> getAllBannersWithPost(@RequestBody(required = false) SearchRequest request) {
+        logger.info("getAllBannersWithPost - incoming request:" + request.toString());
 
         if (Objects.isNull(request)) {
             request = new SearchRequest();
